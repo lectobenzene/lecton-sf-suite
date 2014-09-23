@@ -103,6 +103,7 @@ public class JavaGenerator {
 	public static final String XSD_NAME_RESPONSE = "Response";
 
 	public static final String EXTENSION_XSD = ".xsd";
+	public static final String EXTENSION_JAVA = ".java";
 
 	private boolean isXMLWrapperEnabled = false;
 	private boolean isNamespaceEnabled = false;
