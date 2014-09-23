@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utility
+Bundle-SymbolicName: com.tcs.mobility.sf.lecton.utility;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.tcs.mobility.sf.lecton.utility.Activator
+Bundle-Vendor: TCS
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.console
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.tcs.mobility.sf.lecton.utility.logging,
+ com.tcs.mobility.sf.lecton.utility.utils
+Bundle-ClassPath: bin/
