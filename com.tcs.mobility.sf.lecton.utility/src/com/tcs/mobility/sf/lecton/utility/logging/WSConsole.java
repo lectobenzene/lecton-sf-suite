@@ -75,7 +75,6 @@ public class WSConsole {
 	public static void i(String message) {
 		if (isInfo) {
 			getMessageStream();
-			System.out.println("[INFO] : "+message);
 			out.println("[INFO]  : " + message);
 		}
 	}
