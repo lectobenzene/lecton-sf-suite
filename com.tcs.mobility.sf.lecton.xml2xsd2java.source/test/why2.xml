@@ -1,0 +1,22 @@
+<data>
+	<AccountList>
+		<Account>
+			<any-name>String</any-name>
+			<some-name>String</some-name>
+				<Names>
+					<name-three>String</name-three>
+					<name-four>String</name-four>
+				</Names>
+		</Account>
+		<Account>
+			<any-name>String</any-name>
+			<some-name>String</some-name>
+				<Names>
+					<name-three>String</name-three>
+					<name-four>String</name-four>
+				</Names>
+		</Account>
+	</AccountList>
+	<end-credits>int</end-credits>
+	<some-credits>int</some-credits>
+</data>

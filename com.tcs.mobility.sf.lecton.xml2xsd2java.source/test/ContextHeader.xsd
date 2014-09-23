@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.fortis.com/20140507/MQIL/ContextInfo" xmlns="http://www.fortis.com/20140507/MQIL/ContextInfo" elementFormDefault="qualified">
+	<xs:element name="ContextInfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DistributionChannel" type="DistributionChannelType"/>
+				<xs:element name="ApplicationType" type="ApplicationTypeType" minOccurs="0"/>
+				<xs:element name="MessageType" type="MessageTypeType" minOccurs="0"/>
+				<xs:element name="FunctionType" type="FunctionTypeType" minOccurs="0"/>
+				<xs:element name="RequestTimestamp" type="xs:dateTime"/>
+				<xs:element name="ResponseTimestamp" type="xs:dateTime" minOccurs="0"/>
+				<xs:element name="UserInfo" type="UserInfoType" minOccurs="0"/>
+				<xs:element name="CustomerInfo" type="CustomerInfoType"/>
+				<xs:element name="EntityInfo" type="EntityInfoType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!---->
+	<xs:complexType name="UserInfoType">
+		<xs:sequence>
+			<xs:element name="UserRole" type="UserRoleType"/>
+			<xs:element name="UserId" type="UserIdType"/>
+			<xs:element name="UserIdType" type="UserIdTypeType"/>
+			<xs:element name="UserBrand" type="UserBrandType" minOccurs="0"/>
+			<xs:element name="UserCountry" type="UserCountryType" minOccurs="0"/>
+			<xs:element name="UserLanguage" type="LanguageType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerInfoType">
+		<xs:sequence>
+			<xs:element name="Psp" type="PspType" minOccurs="0"/>
+			<xs:element name="Smid" type="SmidType" minOccurs="0"/>
+			<xs:element name="CustomerLanguage" type="LanguageType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EntityInfoType">
+		<xs:sequence>
+			<xs:element name="EntityId" type="EntityIdType" minOccurs="0"/>
+			<xs:element name="EntityIdType" type="EntityIdTypeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Simple type declarations -->
+	<xs:simpleType name="ApplicationTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DistributionChannelType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EntityIdType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{1,6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EntityIdTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FunctionTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LanguageType">
+		<xs:annotation>
+			<xs:documentation>
+				Code ISO-639
+				(Not case sensitive within the Bank)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-z]{2}|[A-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MessageTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PspType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{1,10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SmidType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{1,10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserBrandType">
+		<xs:annotation>
+			<xs:documentation>
+				Possible values:
+				'FB' = FORTIS et PHB Light
+				'KN' = FINTRO
+				'AG' = Fortis AG
+				'PO' = Banque de lq Poste
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserCountryType">
+		<xs:annotation>
+			<xs:documentation>
+				Possible values:
+				'BE' = Belgium
+				'NL' = Netherlands
+				'LU' = Luxembourg
+				'IE' = Ireland
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserIdType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="36"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserIdTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserRoleType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

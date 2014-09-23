@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Name          :  GetAccountListResponse.xsd
+      Description  :  This the bodyschema for the services GetAccountListRequest . 
+	  Author         : Daniel S. A. Khan
+      Version       :  V00_01
+	  Date           :  29-08-2014.
+      changes     :
+	  V00_01      : 29082014: Initial version Based on 'FBB430_SIL_Service_GetAccountList.docx version 00.02'
+       remarks:    I removed the field account { should be IBAN after 1st August 2014 }
+						vs the specification  I changed:
+						All the tagnames
+						The value string from three elements to a type I created called AmountWithdecimals decimal max decimals 18 fraction 2.
+						The flags to Boolean { MandatesLimitedInd, debitAuthInd, ConsultingAuthInd, StandingOrdersAuthInd, DebtorSepaDirectDebitAuthInd, SEPATransferAuthInd} 
+						The Blue flag is an enumeration {Green,Blue}
+						The Last Refusaldata is xml date format instead of suggested format.
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ctx="http://www.fortis.com/20140507/MQIL/ContextInfo" xmlns="http://www.fortis.com/20140829/EB/GetAccountListSrv" targetNamespace="http://www.fortis.com/20140829/EB/GetAccountListSrv" elementFormDefault="qualified">
+	<xs:include schemaLocation="Common.xsd"/>
+	<xs:include schemaLocation="CommonGAL.xsd"/>
+	<xs:import namespace="http://www.fortis.com/20140507/MQIL/ContextInfo" schemaLocation="ContextHeader.xsd"/>
+	<xs:element name="getAccountListResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ctx:ContextInfo"/>
+				<xs:element name="BusinessMessage" type="WarningType"/>
+				<xs:element name="AcountList">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Account" type="AccountType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

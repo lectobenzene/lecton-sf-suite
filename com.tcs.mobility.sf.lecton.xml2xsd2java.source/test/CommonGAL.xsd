@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (http://www.altova.com) by Fortis Banque sa (Fortis Banque sa) -->
+<!-- Name          :  CommonGAL.xsd
+      Description  :  This the schema which defines the common elements for  the services GetAccountListRequest . 
+	  Author         : Daniel S. A. Khan
+      Version       :  V00_01
+	  Date           :  29-08-2014.
+      changes     :
+	  V00_01      : 29082014: Initial version Based on 'FBB430_SIL_Service_GetAccountList.docx version 00.02'
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="Common.xsd"/>
+	<xs:simpleType name="AccountFamilyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OWN"/>
+			<xs:enumeration value="OTHER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AccountIdType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="AccountNameAliasType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="AccountNameType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="AccountNumberType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="AccountSubFamilyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CURRENT"/>
+			<xs:enumeration value="SAVING"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="AccountType">
+		<xs:sequence id="DescriptionRelationType">
+			<xs:element name="AccountId" type="AccountIdType"/>
+			<xs:element name="IBAN" type="IBANType"/>
+			<xs:element name="BIC" type="BICType" minOccurs="0"/>
+			<xs:element name="AccountBalance" type="BalanceType"/>
+			<xs:element name="AccountBalanceControl" type="BalanceType"/>
+			<xs:element name="OnlineBalace" type="BalanceType"/>
+			<xs:element name="OnlineBalanceControl" type="BalanceType"/>
+			<xs:element name="ProductType" type="ProductTypeType"/>
+			<xs:element name="SubProductType" type="SubProductTypeType"/>
+			<xs:element name="SNum" type="SNumType"/>
+			<xs:element name="AccountName" type="AccountNameType"/>
+			<xs:element name="RelationType" type="RelationTypeType"/>
+			<xs:element name="DescriptionRelation" type="DescriptionRelationType"/>
+			<xs:element name="MandatesLimitedInd" type="FlagtruefalseType"/>
+			<xs:element name="LimitFirstMandate" type="AmountWithDecimalsType" minOccurs="0"/>
+			<xs:element name="LimitSecondMandate" type="AmountWithDecimalsType" minOccurs="0"/>
+			<xs:element name="debitAuthInd" type="FlagtruefalseType"/>
+			<xs:element name="ConsultingAuthInd" type="FlagtruefalseType"/>
+			<xs:element name="StandingOrdersAuthInd" type="FlagtruefalseType"/>
+			<xs:element name="DebtorSepaDirectDebitAuthInd" type="FlagtruefalseType"/>
+			<xs:element name="SEPATransferAuthInd" type="FlagtruefalseType"/>
+			<xs:element name="ShortProductName" type="ShortProductNameType"/>
+			<xs:element name="FullProductName" type="FullProductNameType"/>
+			<xs:element name="AccountNameAlias" type="AccountNameAliasType"/>
+			<xs:element name="BlueInd" type="BankColorType"/>
+			<xs:element name="AccountFamily" type="AccountFamilyType"/>
+			<xs:element name="AccountSubFamily" type="AccountSubFamilyType"/>
+			<xs:element name="LastRefusalDate" type="LastRefusalDateType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AmountWithDecimalsType">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="18"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AmountWithoutDecimalsType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="BalanceType">
+		<xs:sequence>
+			<xs:element name="Currency" type="CurrencyType"/>
+			<xs:element name="Balance">
+				<xs:simpleType>
+					<xs:restriction base="AmountWithDecimalsType"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BankColorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GREEN"/>
+			<xs:enumeration value="BLUE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DescriptionRelationType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="FullProductNameType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="LastRefusalDateType">
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="NumberOfDecimalsType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProductTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RelationTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ShortProductNameType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="SignType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="+"/>
+			<xs:enumeration value="-"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SNumType">
+		<xs:annotation>
+			<xs:documentation>No restrictions need to find out.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="SubProductTypeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WarningCodeType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WarningMessageType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="WarningType">
+		<xs:sequence>
+			<xs:element name="WarningCode" type="WarningCodeType"/>
+			<xs:element name="WarningMessage" type="WarningMessageType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
