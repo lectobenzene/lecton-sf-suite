@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.views.CreateJavaView"
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.convertview"
+            name="%view.name"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.sitefactorycommands"
+            name="SiteFactory Tools">
+      </category>
+      <command
+            categoryId="com.tcs.mobility.sf.lecton.xml2xsd2java.sitefactorycommands"
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.generatejavacommand"
+            name="Generate Java...">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+         <menu
+               label="SiteFactory Tools">
+            <command
+                  commandId="com.tcs.mobility.sf.lecton.xml2xsd2java.generatejavacommand"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="or">
+                        <test
+                              forcePluginActivation="true"
+                              property="generatejava.propertytester.filetype"
+                              value="xsd">
+                        </test>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.commands.GenerateJavaCommand"
+            commandId="com.tcs.mobility.sf.lecton.xml2xsd2java.generatejavacommand">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <test
+                        property="generatejava.propertytester.nojobspending">
+                  </test>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.propertytesters.GenerateJavaPropertyTester"
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.generatejavapropertytester"
+            namespace="generatejava.propertytester"
+            properties="filetype,nojobspending"
+            type="org.eclipse.core.resources.IFile">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.tcs.mobility.sf.lecton.utility.preferences"
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.preferences.JavaGeneratorPreferencePage"
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.javageneratorpreferencepage"
+            name="Java Generator">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.wizards.sitefactory"
+            name="Site Factory">
+      </category>
+      <wizard
+            category="com.tcs.mobility.sf.lecton.xml2xsd2java.wizards.sitefactory"
+            class="com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.wizards.NewDataModelWizard"
+            icon="icons/newfile.png"
+            id="com.tcs.mobility.sf.lecton.xml2xsd2java.newdatamodel"
+            name="Data Model">
+      </wizard>
+   </extension>
+
+</plugin>
