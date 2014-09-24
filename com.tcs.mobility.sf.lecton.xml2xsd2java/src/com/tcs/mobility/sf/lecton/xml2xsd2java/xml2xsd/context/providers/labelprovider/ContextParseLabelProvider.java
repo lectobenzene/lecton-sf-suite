@@ -1,4 +1,4 @@
-package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.labelprovider;
+package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider;
 
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;

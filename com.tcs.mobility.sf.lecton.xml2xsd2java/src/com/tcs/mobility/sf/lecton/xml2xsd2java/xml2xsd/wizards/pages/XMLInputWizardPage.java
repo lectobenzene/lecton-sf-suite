@@ -25,8 +25,8 @@ import com.tcs.mobility.sf.lecton.bttsource.errorhandler.IMessageInjector;
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.KeyedCollectionModel;
 import com.tcs.mobility.sf.lecton.bttsource.parsers.context.DataModelParser;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
-import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.contentprovider.ContextContentProvider;
-import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.labelprovider.ContextParseLabelProvider;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider.ContextContentProvider;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider.ContextParseLabelProvider;
 
 public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 	private static final int TYPE_RESPONSE = 1;

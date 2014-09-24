@@ -1,4 +1,4 @@
-package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.contentprovider;
+package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider;
 
 import java.util.ArrayList;
 
