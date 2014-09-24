@@ -86,7 +86,7 @@ class XsdBuilder {
 								FieldModel fieldModel = (FieldModel)child
 								String type = fieldModel.getDataType()
 								type = type == 'String' ? 'string' : type
-								'xs:element'(name:"${fieldModel.getDataModelAnnotationName()}", type:"xs:${type}")
+								'xs:element'(name:"${fieldModel.getDataModelAnnotationName()}", type:"xs:${type}", maxOccurs:'unbounded')
 							} else {
 								'xs:element'(name:"${child.getDataModelAnnotationName()}", type:"${child.getDataModelAnnotationName()}", maxOccurs:'unbounded')
 							}

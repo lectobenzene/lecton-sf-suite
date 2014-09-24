@@ -1,34 +1,8 @@
 <data>
-	<AccountList>
 		<Account>
-			<first-name>String</first-name>
-			<last-name>String</last-name>
 			<Name-List>
-				<Names>
-					<name-one>String</name-one>
-					<name-two>String</name-two>
-				</Names>
-				<Names>
-					<name-one>String</name-one>
-					<name-two>String</name-two>
-				</Names>
+					<name-one>string</name-one>
+					<name-one>string</name-one>
 			</Name-List>
 		</Account>
-		<Account>
-			<first-name>String</first-name>
-			<last-name>String</last-name>
-			<Name-List>
-				<Names>
-					<name-one>String</name-one>
-					<name-two>String</name-two>
-				</Names>
-				<Names>
-					<name-one>String</name-one>
-					<name-two>String</name-two>
-				</Names>
-			</Name-List>
-		</Account>
-	</AccountList>
-	<end-credits>int</end-credits>
-	<some-credits>int</some-credits>
 </data>

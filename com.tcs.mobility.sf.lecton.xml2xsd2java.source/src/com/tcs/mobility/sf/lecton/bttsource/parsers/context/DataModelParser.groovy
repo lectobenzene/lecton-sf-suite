@@ -153,8 +153,8 @@ class DataModelParser {
 				IndexedCollectionModel iColl = new IndexedCollectionModel(child.name(), parent)
 				if(childNode.childNodes().size()==0){
 					FieldModel field = new FieldModel(childNode.name(), iColl)
-					if(child.text()){
-						field.setDataType(child.text())
+					if(childNode.text()){
+						field.setDataType(childNode.text())
 					}
 					iColl.addElement(field)
 				}else{
