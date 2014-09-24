@@ -1,5 +1,7 @@
 package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.wizards.pages;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,6 +28,8 @@ import com.tcs.mobility.sf.lecton.bttsource.parsers.context.DataModelParser;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider.ContextContentProvider;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider.ContextParseLabelProvider;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDInfo;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDProposal;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDProposalProvider;
 
 public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
@@ -101,7 +105,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 
 		txtRequestInput = new Text(composite_2, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.CANCEL);
-		txtRequestInput.setText("<data>\n\t<AccountList>\n\t\t<Account>\n\t\t\t<first-name>String</first-name>\n\t\t\t<last-name>String</last-name>\n\t\t\t<Name-List>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-one>String</name-one>\n\t\t\t\t\t<name-two>String</name-two>\n\t\t\t\t</Names>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-one>String</name-one>\n\t\t\t\t\t<name-two>String</name-two>\n\t\t\t\t</Names>\n\t\t\t</Name-List>\n\t\t</Account>\n\t\t<Account>\n\t\t\t<first-name>String</first-name>\n\t\t\t<last-name>String</last-name>\n\t\t\t<Name-List>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-one>String</name-one>\n\t\t\t\t\t<name-two>String</name-two>\n\t\t\t\t</Names>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-one>String</name-one>\n\t\t\t\t\t<name-two>String</name-two>\n\t\t\t\t</Names>\n\t\t\t</Name-List>\n\t\t</Account>\n\t</AccountList>\n\t<end-credits>int</end-credits>\n\t<some-credits>int</some-credits>\n</data>");
+		txtRequestInput.setText("<DATA></DATA>");
 
 		tbtmRequestDesign = new TabItem(requestTabFolder, SWT.NONE);
 		tbtmRequestDesign.setText("Validate");
@@ -157,7 +161,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 
 		txtResponseInput = new Text(composite_4, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.CANCEL);
-		txtResponseInput.setText("<data>\n\t<AccountList>\n\t\t<Account>\n\t\t\t<any-name>String</any-name>\n\t\t\t<some-name>String</some-name>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-three>String</name-three>\n\t\t\t\t\t<name-four>String</name-four>\n\t\t\t\t</Names>\n\t\t</Account>\n\t\t<Account>\n\t\t\t<any-name>String</any-name>\n\t\t\t<some-name>String</some-name>\n\t\t\t\t<Names>\n\t\t\t\t\t<name-three>String</name-three>\n\t\t\t\t\t<name-four>String</name-four>\n\t\t\t\t</Names>\n\t\t</Account>\n\t</AccountList>\n\t<end-credits>int</end-credits>\n\t<some-credits>int</some-credits>\n</data>");
+		txtResponseInput.setText("<DATA></DATA>");
 
 		tbtmDesign = new TabItem(responseTabFolder, SWT.NONE);
 		tbtmDesign.setImage(Activator.getDefault().createImage("icons/filenav_nav.gif"));
@@ -182,7 +186,11 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 	private void setContentProposal() throws ParseException {
 		char[] autoActivationChars = new char[] {'>'};
 		KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
-		String[] proposals = new String[]{"string","decimal","int"};
+		String[] proposals = new XSDProposal().getXsdContentArray();
+		
+		// Sort the proposal content
+		Arrays.sort(proposals);
+		
 		TextContentAdapter controlContentAdapter = new TextContentAdapter();
 		XSDProposalProvider proposalProvider = new XSDProposalProvider(proposals);
 		// Filtering login not yet implemented

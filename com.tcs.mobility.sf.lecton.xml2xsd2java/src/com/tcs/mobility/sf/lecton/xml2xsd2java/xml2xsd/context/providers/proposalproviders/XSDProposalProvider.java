@@ -2,7 +2,6 @@ package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.propos
 
 import java.util.ArrayList;
 
-import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
@@ -39,12 +38,12 @@ public class XSDProposalProvider implements IContentProposalProvider {
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		if (filterProposals) {
-			ArrayList<ContentProposal> list = new ArrayList<ContentProposal>();
+			ArrayList<XSDProposal> list = new ArrayList<XSDProposal>();
 			for (int i = 0; i < proposals.length; i++) {
 				if (proposals[i].length() >= contents.length()
 						&& proposals[i].substring(0, contents.length())
 								.equalsIgnoreCase(contents)) {
-					list.add(new ContentProposal(proposals[i]));
+					list.add(new XSDProposal(proposals[i]));
 				}
 			}
 			return list.toArray(new IContentProposal[list
@@ -53,7 +52,7 @@ public class XSDProposalProvider implements IContentProposalProvider {
 		if (contentProposals == null) {
 			contentProposals = new IContentProposal[proposals.length];
 			for (int i = 0; i < proposals.length; i++) {
-				contentProposals[i] = new ContentProposal(proposals[i]);
+				contentProposals[i] = new XSDProposal(proposals[i]);
 			}
 		}
 		return contentProposals;

@@ -2,7 +2,6 @@ package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.wizards;
 
 import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -23,7 +22,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -38,7 +36,6 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.internal.intro.IntroMessages;
 import org.eclipse.ui.progress.UIJob;
 
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.KeyedCollectionModel;
@@ -161,6 +158,7 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 					commonPackageName);
 			final Job responseJob = generateJavaJob("GenerateResponseJavaJob", javaGenerator, project, directoryPath, responseXsdFile, packageName,
 					commonPackageName);
+			final Job createModuleJob = createModuleFileJob(serviceName, modulePackageName, monitor, srcResource, project);
 
 			// Set listener to determine if 1st job is finished. Only then,
 			// the 2nd job should be executed.
@@ -171,6 +169,8 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 				public void done(IJobChangeEvent event) {
 					if (event.getJob().getName().equalsIgnoreCase("Assigning propOrder")) {
 						responseJob.schedule();
+					}else if(event.getJob().getName().equalsIgnoreCase(responseJob.getName())){
+						createModuleJob.schedule();
 						manager.removeJobChangeListener(this);
 					}
 				}
@@ -178,40 +178,32 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 			};
 			manager.addJobChangeListener(listener);
 			requestJob.schedule();
-
-			/*
-			 * Create Module java file
-			 */
-			IJavaProject javaProject = JavaCore.create(project);
-			IPackageFragmentRoot packageFragmentRoot = javaProject.getPackageFragmentRoot(srcResource);
-			IPackageFragment modulePackage = packageFragmentRoot.getPackageFragment(modulePackageName);
-
-			// Create package for service
-			IFolder moduleFolder = (IFolder) modulePackage.getResource();
-			IFolder serviceModuleFolder = moduleFolder.getFolder(Introspector.decapitalize(serviceName));
-			serviceModuleFolder.getLocation().toFile().mkdirs();
-			project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
-
-			IPackageFragment servicePackage = (IPackageFragment) JavaCore.create(serviceModuleFolder);
-			String moduleName = serviceName + "Module";
-
-			// Create the Module file
-			final ICompilationUnit moduleUnit = servicePackage.createCompilationUnit(moduleName + JavaGenerator.EXTENSION_JAVA,
-					getModuleContents(serviceName, serviceModuleFolder, moduleName, modulePackageName), true, monitor);
-
-			
-			// Organize imports for the Module file created
-			Runnable job = new Runnable() {
-				@Override
-				public void run() {
-					OrganizeImportsAction org = new OrganizeImportsAction(site);
-					org.run(moduleUnit);
-				}
-
-			};
-			getShell().getDisplay().syncExec(job);
 		}
 		monitor.worked(1);
+	}
+
+	private ICompilationUnit createModule(String serviceName, String modulePackageName, IProgressMonitor monitor, IResource srcResource,
+			IProject project) throws CoreException, JavaModelException {
+		/*
+		 * Create Module java file
+		 */
+		IJavaProject javaProject = JavaCore.create(project);
+		IPackageFragmentRoot packageFragmentRoot = javaProject.getPackageFragmentRoot(srcResource);
+		IPackageFragment modulePackage = packageFragmentRoot.getPackageFragment(modulePackageName);
+
+		// Create package for service
+		IFolder moduleFolder = (IFolder) modulePackage.getResource();
+		IFolder serviceModuleFolder = moduleFolder.getFolder(Introspector.decapitalize(serviceName));
+		serviceModuleFolder.getLocation().toFile().mkdirs();
+		project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
+
+		IPackageFragment servicePackage = (IPackageFragment) JavaCore.create(serviceModuleFolder);
+		String moduleName = serviceName + "Module";
+
+		// Create the Module file
+		final ICompilationUnit moduleUnit = servicePackage.createCompilationUnit(moduleName + JavaGenerator.EXTENSION_JAVA,
+				getModuleContents(serviceName, serviceModuleFolder, moduleName, modulePackageName), true, monitor);
+		return moduleUnit;
 	}
 
 	private String getModuleContents(String serviceName, IFolder serviceModuleFolder, String moduleName, String modulePackageName) {
@@ -248,6 +240,36 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		return job;
 	}
 
+	private Job createModuleFileJob(final String serviceName, final String modulePackageName, final IProgressMonitor monitor, final IResource srcResource,
+			final IProject project){
+		final Job job = new UIJob("CreateModuleFile") {
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return (JavaGenerator.JOB_FAMILY_GENERATE_JAVA).equals(family);
+			}
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				ICompilationUnit moduleUnit;
+				try {
+					moduleUnit = createModule(serviceName, modulePackageName, monitor, srcResource, project);
+					OrganizeImportsAction org = new OrganizeImportsAction(site);
+					org.run(moduleUnit);
+				} catch (JavaModelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		return job;
+	}
+	
+	
 	private IFile createXsdFile(String serviceName, KeyedCollectionModel rootKColl, String type, IProgressMonitor monitor, IResource resResource) {
 		XsdBuilder builder = new XsdBuilder();
 		String javaClassName = serviceName + type;
