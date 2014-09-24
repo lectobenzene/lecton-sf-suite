@@ -4,7 +4,6 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -186,7 +185,8 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		String[] proposals = new String[]{"string","decimal","int"};
 		TextContentAdapter controlContentAdapter = new TextContentAdapter();
 		XSDProposalProvider proposalProvider = new XSDProposalProvider(proposals);
-		proposalProvider.setFiltering(true);
+		// Filtering login not yet implemented
+		//proposalProvider.setFiltering(true);
 		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
 		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
 	}
