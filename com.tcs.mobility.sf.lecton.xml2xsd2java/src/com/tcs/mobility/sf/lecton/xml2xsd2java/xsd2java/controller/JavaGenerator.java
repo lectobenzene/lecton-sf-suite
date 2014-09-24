@@ -173,12 +173,12 @@ public class JavaGenerator {
 		isXMLWrapperEnabled = preferenceStore.getBoolean(PreferenceConstants.PREF_BOOLEAN_XMLELEMENTWRAPPER);
 		isNamespaceEnabled = preferenceStore.getBoolean(PreferenceConstants.PREF_BOOLEAN_ENABLEFIELDNAMESPACE);
 
-		if(override){
+		if (override) {
 			job.schedule();
-		}else{
+		} else {
 			showDialog(packagePath, commonPackagePath, job);
 		}
-		
+
 		manager.addJobChangeListener(listener);
 	}
 
@@ -468,7 +468,7 @@ public class JavaGenerator {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				System.out.println("ASSIGN MOVE JAVA JOB - FINISHED");
 				return Status.OK_STATUS;
 			}

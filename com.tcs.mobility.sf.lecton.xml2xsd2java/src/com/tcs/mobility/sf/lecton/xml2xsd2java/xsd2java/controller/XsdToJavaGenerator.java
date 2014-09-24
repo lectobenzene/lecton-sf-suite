@@ -13,7 +13,10 @@ public class XsdToJavaGenerator {
 
 	public static void main(String[] args) {
 		System.out.println("I am Iron Man...");
-		String[] argArray = {"-Xxew","-disableXmlSecurity","-d", "C:\\Users\\Saravana\\runtime-EclipseApplicationLuna\\BE_FORTIS_DBIA-ap01-module\\src\\main\\java", "-p", "com.bnppf.adm.easybanking.dbia.al.message.getAccountList", "C:\\Users\\Saravana\\runtime-EclipseApplicationLuna\\BE_FORTIS_DBIA-ap01-module\\src\\main\\resources\\extract\\xsd\\GetAccountListRequest.xsd" };
+		String[] argArray = { "-Xxew", "-disableXmlSecurity", "-d",
+				"C:\\Users\\Saravana\\runtime-EclipseApplicationLuna\\BE_FORTIS_DBIA-ap01-module\\src\\main\\java", "-p",
+				"com.bnppf.adm.easybanking.dbia.al.message.getAccountList",
+				"C:\\Users\\Saravana\\runtime-EclipseApplicationLuna\\BE_FORTIS_DBIA-ap01-module\\src\\main\\resources\\extract\\xsd\\GetAccountListRequest.xsd" };
 		try {
 			Driver.run(argArray, new XJCListener() {
 
@@ -74,17 +77,17 @@ public class XsdToJavaGenerator {
 		switch (type) {
 		case TYPE_STANDARD:
 			WSConsole.d("XML Wrapper not enabled");
-			argArray = new String[] {"-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
+			argArray = new String[] { "-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
 			break;
 		case TYPE_ADVANCED:
 			WSConsole.d("XML Wrapper enabled");
-			argArray = new String[] {"-Xxew","-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
+			argArray = new String[] { "-Xxew", "-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
 			break;
 		default:
-			argArray = new String[] {"-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
+			argArray = new String[] { "-disableXmlSecurity", "-d", directoryPath, "-p", packagePath, xsdPath };
 			break;
 		}
-		
+
 		try {
 			Driver.run(argArray, new XJCListener() {
 

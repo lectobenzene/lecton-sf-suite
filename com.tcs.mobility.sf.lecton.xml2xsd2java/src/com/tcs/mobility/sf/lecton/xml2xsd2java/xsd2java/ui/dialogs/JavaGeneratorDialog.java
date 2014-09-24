@@ -20,7 +20,7 @@ public class JavaGeneratorDialog extends Dialog {
 	private boolean nameSpaceFieldEnabled;
 	private Button btnAddNamespaceTo;
 	private Button btnEnableXmlelementwrapper;
-	
+
 	public JavaGeneratorDialog(Shell parentShell, String currentPackage, String commonPackage) {
 		super(parentShell);
 		this.currentPackage = currentPackage;
@@ -75,10 +75,10 @@ public class JavaGeneratorDialog extends Dialog {
 
 		btnEnableXmlelementwrapper = new Button(cmpButtonBar, SWT.CHECK);
 		btnEnableXmlelementwrapper.setText("Enable XmlElementWrapper");
-		
+
 		btnAddNamespaceTo = new Button(cmpButtonBar, SWT.CHECK);
 		btnAddNamespaceTo.setText("Add namespace to each Field");
-		
+
 		txtCurrentPackage.setText(currentPackage);
 		txtCommonPackage.setText(commonPackage);
 		btnAddNamespaceTo.setSelection(nameSpaceFieldEnabled);

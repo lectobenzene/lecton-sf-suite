@@ -43,8 +43,8 @@ import org.eclipse.ui.progress.UIJob;
 
 import com.tcs.mobility.sf.lecton.xml2xsd.source.parser.XsdParser;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.utils.Utility;
-import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.XsdToJavaGenerator;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.JavaRefactor;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.XsdToJavaGenerator;
 
 public class CreateJavaView extends ViewPart {
 
@@ -215,28 +215,26 @@ public class CreateJavaView extends ViewPart {
 						try {
 							packageRoot = javaProject.findPackageFragmentRoot(packageRootPath);
 							IPackageFragment packageFragment = packageRoot.getPackageFragment(txtPackPath.getText());
-							if(packageFragment.exists()){
+							if (packageFragment.exists()) {
 								javaFilesAlreadyPresents = packageFragment.getCompilationUnits();
 								System.out.println("EXISTING JAVA");
-								for(ICompilationUnit unitss : javaFilesAlreadyPresents){
+								for (ICompilationUnit unitss : javaFilesAlreadyPresents) {
 									System.out.println(unitss.getElementName());
 								}
 							}
-							
-							
+
 						} catch (JavaModelException e2) {
 							// TODO Auto-generated catch block
 							e2.printStackTrace();
 						}
 
-						
-						
 						final Job job = new UIJob("Generate Java") {
 
 							@Override
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								XsdToJavaGenerator generator = new XsdToJavaGenerator();
-								generator.generate(txtDirPath.getText(), txtPackPath.getText(), txtXsdPath.getText(), XsdToJavaGenerator.TYPE_ADVANCED);
+								generator.generate(txtDirPath.getText(), txtPackPath.getText(), txtXsdPath.getText(),
+										XsdToJavaGenerator.TYPE_ADVANCED);
 								return Status.OK_STATUS;
 							}
 						};
@@ -249,7 +247,7 @@ public class CreateJavaView extends ViewPart {
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								System.out.println("JOB IS OK");
 								// Adding SOURCE FOLDER to classpath
-								
+
 								IClasspathEntry[] entries = null;
 								try {
 									entries = javaProject.getRawClasspath();
@@ -324,10 +322,10 @@ public class CreateJavaView extends ViewPart {
 									}
 
 									System.out.println(javaFilesAlreadyPresents == null);
-									if(javaFilesAlreadyPresents != null){
+									if (javaFilesAlreadyPresents != null) {
 										System.out.println(javaFilesAlreadyPresents.length);
 										unitsToMove.removeAll(Arrays.asList(javaFilesAlreadyPresents));
-										for(ICompilationUnit unitss : javaFilesAlreadyPresents){
+										for (ICompilationUnit unitss : javaFilesAlreadyPresents) {
 											System.out.println(unitss.getElementName());
 										}
 									}
@@ -336,7 +334,6 @@ public class CreateJavaView extends ViewPart {
 									ICompilationUnit[] filesToMove = {};
 									new JavaRefactor().moveClass(packageRoot, destinationPackage, unitsToMove.toArray(filesToMove));
 
-								
 								} catch (JavaModelException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -350,50 +347,50 @@ public class CreateJavaView extends ViewPart {
 
 						final IJobManager manager = Job.getJobManager();
 						final IJobChangeListener listener = new IJobChangeListener() {
-							
+
 							@Override
 							public void sleeping(IJobChangeEvent event) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
+
 							@Override
 							public void scheduled(IJobChangeEvent event) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
+
 							@Override
 							public void running(IJobChangeEvent event) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
+
 							@Override
 							public void done(IJobChangeEvent event) {
 								System.out.println(event.getJob().getName().equalsIgnoreCase(job.getName()));
 								// TODO Auto-generated method stub
-								if(event.getJob().getName().equalsIgnoreCase(job.getName())){
+								if (event.getJob().getName().equalsIgnoreCase(job.getName())) {
 									System.out.println("JOB IS DONE - JAVA CREATED");
 									secondJob.schedule();
 									manager.removeJobChangeListener(this);
 								}
 							}
-							
+
 							@Override
 							public void awake(IJobChangeEvent event) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
+
 							@Override
 							public void aboutToRun(IJobChangeEvent event) {
 								// TODO Auto-generated method stub
-								
+
 							}
 						};
 						manager.addJobChangeListener(listener);
-						
+
 					} else if (firstElement instanceof IJavaElement) {
 						IPath path = ((IJavaElement) firstElement).getPath();
 

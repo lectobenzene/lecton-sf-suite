@@ -7,10 +7,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 
-
-public class JavaGeneratorPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+public class JavaGeneratorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	public JavaGeneratorPreferencePage() {
 		super(GRID);
@@ -26,5 +23,5 @@ public class JavaGeneratorPreferencePage
 
 	public void init(IWorkbench workbench) {
 	}
-	
+
 }

@@ -14,16 +14,17 @@ public class UtilResource {
 	/**
 	 * Creates a resource and refreshes the workspace
 	 * 
-	 * @param resource The resource to create
+	 * @param resource
+	 *            The resource to create
 	 */
-	public static void createFile(IResource resource){
+	public static void createFile(IResource resource) {
 		File file = new File(resource.getLocation().toOSString());
-		if(file.isFile()){
+		if (file.isFile()) {
 			file.getParentFile().mkdirs();
-		}else{
+		} else {
 			file.mkdirs();
 		}
-		
+
 		// refresh the workspace
 		try {
 			resource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -32,21 +33,22 @@ public class UtilResource {
 			WSConsole.e(e);
 		}
 	}
-	
+
 	/**
 	 * Creates a resource and refreshes the workspace
 	 * 
-	 * @param path Path relative to the workspace
+	 * @param path
+	 *            Path relative to the workspace
 	 */
-	public static void createFile(String path){
+	public static void createFile(String path) {
 		IResource resource = getResource(path);
 		File file = new File(resource.getLocation().toOSString());
-		if(file.isFile()){
+		if (file.isFile()) {
 			file.getParentFile().mkdirs();
-		}else{
+		} else {
 			file.mkdirs();
 		}
-		
+
 		// refresh the workspace
 		try {
 			resource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -55,7 +57,7 @@ public class UtilResource {
 			WSConsole.e(e);
 		}
 	}
-	
+
 	/**
 	 * Returns a {@code IResource} object for the given path
 	 * 
@@ -66,8 +68,7 @@ public class UtilResource {
 	public static IResource getResource(String path) {
 		return ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(path));
 	}
-	
-	
+
 	/**
 	 * Returns a {@code IResource} HANDLE object for the given path
 	 * 
@@ -77,9 +78,9 @@ public class UtilResource {
 	 */
 	public static IResource getResourceHandle(String path) {
 		Path fullPath = new Path(path);
-		if(fullPath.getFileExtension() != null){
+		if (fullPath.getFileExtension() != null) {
 			return ResourcesPlugin.getWorkspace().getRoot().getFile(fullPath);
-		}else{
+		} else {
 			return ResourcesPlugin.getWorkspace().getRoot().getFolder(fullPath);
 		}
 	}

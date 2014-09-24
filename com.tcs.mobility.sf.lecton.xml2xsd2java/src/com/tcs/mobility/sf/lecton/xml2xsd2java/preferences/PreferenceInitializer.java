@@ -5,7 +5,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 
-
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public PreferenceInitializer() {

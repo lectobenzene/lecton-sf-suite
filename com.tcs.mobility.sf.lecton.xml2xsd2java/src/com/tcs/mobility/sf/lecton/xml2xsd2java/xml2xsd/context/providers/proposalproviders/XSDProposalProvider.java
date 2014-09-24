@@ -34,20 +34,17 @@ public class XSDProposalProvider implements IContentProposalProvider {
 	public XSDProposalProvider(String[] proposals) {
 		this.proposals = proposals;
 	}
-	
+
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		if (filterProposals) {
 			ArrayList<XSDProposal> list = new ArrayList<XSDProposal>();
 			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].length() >= contents.length()
-						&& proposals[i].substring(0, contents.length())
-								.equalsIgnoreCase(contents)) {
+				if (proposals[i].length() >= contents.length() && proposals[i].substring(0, contents.length()).equalsIgnoreCase(contents)) {
 					list.add(new XSDProposal(proposals[i]));
 				}
 			}
-			return list.toArray(new IContentProposal[list
-					.size()]);
+			return list.toArray(new IContentProposal[list.size()]);
 		}
 		if (contentProposals == null) {
 			contentProposals = new IContentProposal[proposals.length];
@@ -74,10 +71,10 @@ public class XSDProposalProvider implements IContentProposalProvider {
 	 * the current field content.
 	 * 
 	 * @param filterProposals
-	 *            <code>true</code> if the proposals should be filtered to
-	 *            show only those that match the current contents of the field,
-	 *            and <code>false</code> if the proposals should remain the
-	 *            same, ignoring the field content.
+	 *            <code>true</code> if the proposals should be filtered to show
+	 *            only those that match the current contents of the field, and
+	 *            <code>false</code> if the proposals should remain the same,
+	 *            ignoring the field content.
 	 * @since 3.3
 	 */
 	public void setFiltering(boolean filterProposals) {

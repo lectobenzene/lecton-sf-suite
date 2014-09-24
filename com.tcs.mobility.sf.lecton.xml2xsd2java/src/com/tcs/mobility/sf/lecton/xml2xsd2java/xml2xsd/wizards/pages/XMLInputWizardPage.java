@@ -28,7 +28,6 @@ import com.tcs.mobility.sf.lecton.bttsource.parsers.context.DataModelParser;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider.ContextContentProvider;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider.ContextParseLabelProvider;
-import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDInfo;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDProposal;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDProposalProvider;
 
@@ -103,8 +102,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		tbtmRequestSource.setControl(composite_2);
 		composite_2.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		txtRequestInput = new Text(composite_2, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.CANCEL);
+		txtRequestInput = new Text(composite_2, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		txtRequestInput.setText("<DATA></DATA>");
 
 		tbtmRequestDesign = new TabItem(requestTabFolder, SWT.NONE);
@@ -117,14 +115,12 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 
 		requestTreeViewer = new TreeViewer(composite_3, SWT.BORDER);
 		requestTreeViewer.setContentProvider(new ContextContentProvider());
-		requestTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new ContextParseLabelProvider(parent.getDisplay())));
+		requestTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ContextParseLabelProvider(parent.getDisplay())));
 
 		requestTabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				isRequestSuccessful = parseDesignData(e, txtRequestInput, requestTreeViewer,
-						TYPE_REQUEST);
+				isRequestSuccessful = parseDesignData(e, txtRequestInput, requestTreeViewer, TYPE_REQUEST);
 				updateStatus();
 			}
 		});
@@ -146,8 +142,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		responseTabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				isResponseSuccessful = parseDesignData(e, txtResponseInput, responseTreeViewer,
-						TYPE_RESPONSE);
+				isResponseSuccessful = parseDesignData(e, txtResponseInput, responseTreeViewer, TYPE_RESPONSE);
 				updateStatus();
 			}
 		});
@@ -159,8 +154,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		tbtmSource.setControl(composite_4);
 		composite_4.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		txtResponseInput = new Text(composite_4, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.CANCEL);
+		txtResponseInput = new Text(composite_4, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		txtResponseInput.setText("<DATA></DATA>");
 
 		tbtmDesign = new TabItem(responseTabFolder, SWT.NONE);
@@ -173,9 +167,8 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 
 		responseTreeViewer = new TreeViewer(composite_5, SWT.BORDER);
 		responseTreeViewer.setContentProvider(new ContextContentProvider());
-		responseTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new ContextParseLabelProvider(parent.getDisplay())));
-		
+		responseTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ContextParseLabelProvider(parent.getDisplay())));
+
 		try {
 			setContentProposal();
 		} catch (ParseException e1) {
@@ -186,14 +179,14 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 	private void setContentProposal() throws ParseException {
 		KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
 		String[] proposals = new XSDProposal().getXsdContentArray();
-		
+
 		// Sort the proposal content
 		Arrays.sort(proposals);
-		
+
 		TextContentAdapter controlContentAdapter = new TextContentAdapter();
 		XSDProposalProvider proposalProvider = new XSDProposalProvider(proposals);
 		// Filtering login not yet implemented
-		//proposalProvider.setFiltering(true);
+		// proposalProvider.setFiltering(true);
 		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, null);
 		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, null);
 	}
@@ -227,8 +220,7 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		return false;
 	}
 
-	private boolean parseDesignData(SelectionEvent e, Text txtInput, TreeViewer inputTreeViewer,
-			int type) {
+	private boolean parseDesignData(SelectionEvent e, Text txtInput, TreeViewer inputTreeViewer, int type) {
 		String tabName = ((TabItem) e.item).getText();
 		if ("Validate".equals(tabName) && txtInput.getText().length() > 0) {
 			String xmlContent = txtInput.getText();

@@ -114,7 +114,7 @@ public class PrimaryInputWizardPage extends WizardPage {
 		});
 		btnBrowse.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnBrowse.setText("Browse...");
-		
+
 		lblNewLabel = new Label(container, SWT.NONE);
 
 		grpPackageDetails = new Group(container, SWT.NONE);
@@ -204,8 +204,7 @@ public class PrimaryInputWizardPage extends WizardPage {
 			// Get Application Code
 			String appCode = JavaGenerator.PROJECT_DEFAULT_CODE;
 			if (projectName.startsWith(JavaGenerator.PROJECT_PREFIX)) {
-				appCode = projectName.substring(JavaGenerator.PROJECT_PREFIX.length(), JavaGenerator.PROJECT_PREFIX.length() + 4)
-						.toLowerCase();
+				appCode = projectName.substring(JavaGenerator.PROJECT_PREFIX.length(), JavaGenerator.PROJECT_PREFIX.length() + 4).toLowerCase();
 			}
 
 			// Contruct package name

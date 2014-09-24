@@ -64,7 +64,7 @@ public class WSConsole {
 			out.println("[ERROR] : " + "----------------- EXCEPTION STACK TRACE -----------------");
 		}
 	}
-	
+
 	public static void e(String message) {
 		if (isError) {
 			getMessageStream();

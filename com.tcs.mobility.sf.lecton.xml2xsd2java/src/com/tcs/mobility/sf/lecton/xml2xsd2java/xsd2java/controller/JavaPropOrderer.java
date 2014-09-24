@@ -29,7 +29,7 @@ import com.tcs.mobility.sf.lecton.xml2xsd2java.utils.Utility;
 
 public class JavaPropOrderer {
 
-	public void runPropOrder(List<ICompilationUnit> units){
+	public void runPropOrder(List<ICompilationUnit> units) {
 		for (ICompilationUnit unit : units) {
 			Document document;
 			try {
@@ -74,7 +74,7 @@ public class JavaPropOrderer {
 				// update of the compilation unit
 				unit.getBuffer().setContents(newSource);
 				unit.getBuffer().save(null, true);
-				
+
 			} catch (JavaModelException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -85,17 +85,17 @@ public class JavaPropOrderer {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		
+
 		}
 	}
-	
+
 	private List<Expression> getNewPropOrderList(ICompilationUnit cu, String typeName, AST ast) throws JavaModelException {
 		IType type = cu.getType(typeName);
 		IField[] fields = type.getFields();
 		StringLiteral propOrderValue;
 		List<Expression> propOrders = new ArrayList<Expression>();
 		for (IField field : fields) {
-			if(!field.getElementName().equalsIgnoreCase("serialVersionUID")){
+			if (!field.getElementName().equalsIgnoreCase("serialVersionUID")) {
 				propOrderValue = ast.newStringLiteral();
 				propOrderValue.setLiteralValue(field.getElementName());
 				propOrders.add(propOrderValue);

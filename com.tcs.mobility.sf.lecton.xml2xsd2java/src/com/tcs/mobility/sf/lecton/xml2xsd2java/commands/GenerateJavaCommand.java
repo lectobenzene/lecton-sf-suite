@@ -17,14 +17,14 @@ import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.JavaGenerator
 
 public class GenerateJavaCommand extends AbstractHandler {
 
-
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		IWorkbenchPartSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
 
 		// Get selection from Package Explorer
-		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection(JavaGenerator.ID_PACKAGE_EXPLORER);
+		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
+				.getSelection(JavaGenerator.ID_PACKAGE_EXPLORER);
 		if (selection instanceof IStructuredSelection) {
 
 			// Get the first element of the selection
@@ -46,18 +46,22 @@ public class GenerateJavaCommand extends AbstractHandler {
 				String xsdPath = ((IResource) firstElement).getLocation().toOSString();
 
 				// Calculate the last segment of the package name
-				String packageEndName =getPackageEndName(firstElement);
+				String packageEndName = getPackageEndName(firstElement);
 
 				// Construct package name based on SIL or Data Model
 				String packagePath = null;
 				String commonPackagePath = null;
-				
+
 				if (projectName.toLowerCase().contains(JavaGenerator.DOMAIN)) {
-					packagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_DOMAIN_MODEL + "." + Introspector.decapitalize(packageEndName);
-					commonPackagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_DOMAIN_MODEL + "." + JavaGenerator.PACKAGE_COMMON;
+					packagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_DOMAIN_MODEL + "."
+							+ Introspector.decapitalize(packageEndName);
+					commonPackagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_DOMAIN_MODEL + "."
+							+ JavaGenerator.PACKAGE_COMMON;
 				} else {
-					packagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_SIL + "." + Introspector.decapitalize(packageEndName);
-					commonPackagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_SIL + "." + JavaGenerator.PACKAGE_COMMON;
+					packagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_SIL + "."
+							+ Introspector.decapitalize(packageEndName);
+					commonPackagePath = JavaGenerator.PACKAGE_PREFIX + "." + appCode + "." + JavaGenerator.PACKAGE_SIL + "."
+							+ JavaGenerator.PACKAGE_COMMON;
 				}
 
 				new JavaGenerator().generateJava(project, directoryPath, xsdPath, packagePath, commonPackagePath, site, false);
@@ -66,10 +70,6 @@ public class GenerateJavaCommand extends AbstractHandler {
 		return null;
 	}
 
-
-	
-
-	
 	/**
 	 * Returns that last segment of the package name
 	 * 

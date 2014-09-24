@@ -169,7 +169,7 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 				public void done(IJobChangeEvent event) {
 					if (event.getJob().getName().equalsIgnoreCase("Assigning propOrder")) {
 						responseJob.schedule();
-					}else if(event.getJob().getName().equalsIgnoreCase(responseJob.getName())){
+					} else if (event.getJob().getName().equalsIgnoreCase(responseJob.getName())) {
 						createModuleJob.schedule();
 						manager.removeJobChangeListener(this);
 					}
@@ -240,8 +240,8 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		return job;
 	}
 
-	private Job createModuleFileJob(final String serviceName, final String modulePackageName, final IProgressMonitor monitor, final IResource srcResource,
-			final IProject project){
+	private Job createModuleFileJob(final String serviceName, final String modulePackageName, final IProgressMonitor monitor,
+			final IResource srcResource, final IProject project) {
 		final Job job = new UIJob("CreateModuleFile") {
 
 			@Override
@@ -268,8 +268,7 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		};
 		return job;
 	}
-	
-	
+
 	private IFile createXsdFile(String serviceName, KeyedCollectionModel rootKColl, String type, IProgressMonitor monitor, IResource resResource) {
 		XsdBuilder builder = new XsdBuilder();
 		String javaClassName = serviceName + type;
