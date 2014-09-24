@@ -184,7 +184,6 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 	}
 
 	private void setContentProposal() throws ParseException {
-		char[] autoActivationChars = new char[] {'>'};
 		KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
 		String[] proposals = new XSDProposal().getXsdContentArray();
 		
@@ -195,8 +194,8 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		XSDProposalProvider proposalProvider = new XSDProposalProvider(proposals);
 		// Filtering login not yet implemented
 		//proposalProvider.setFiltering(true);
-		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
-		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
+		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, null);
+		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, null);
 	}
 
 	protected void updateStatus() {
