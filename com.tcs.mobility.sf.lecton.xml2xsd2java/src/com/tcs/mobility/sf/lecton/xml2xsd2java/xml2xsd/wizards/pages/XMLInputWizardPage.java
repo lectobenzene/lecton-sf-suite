@@ -1,6 +1,11 @@
 package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.wizards.pages;
 
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -166,6 +171,22 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		responseTreeViewer.setContentProvider(new ContextContentProvider());
 		responseTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new ContextParseLabelProvider(parent.getDisplay())));
+		
+		try {
+			setContentProposal();
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void setContentProposal() throws ParseException {
+		char[] autoActivationChars = new char[] {'>'};
+		KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
+		String[] proposals = new String[]{"string","decimal","int"};
+		TextContentAdapter controlContentAdapter = new TextContentAdapter();
+		SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(proposals);
+		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
+		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
 	}
 
 	protected void updateStatus() {
