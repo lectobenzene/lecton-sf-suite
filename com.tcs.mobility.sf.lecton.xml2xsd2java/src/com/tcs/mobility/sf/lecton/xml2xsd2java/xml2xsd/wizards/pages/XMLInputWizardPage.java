@@ -27,6 +27,7 @@ import com.tcs.mobility.sf.lecton.bttsource.parsers.context.DataModelParser;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider.ContextContentProvider;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider.ContextParseLabelProvider;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.proposalproviders.XSDProposalProvider;
 
 public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 	private static final int TYPE_RESPONSE = 1;
@@ -184,7 +185,8 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 		KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
 		String[] proposals = new String[]{"string","decimal","int"};
 		TextContentAdapter controlContentAdapter = new TextContentAdapter();
-		SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(proposals);
+		XSDProposalProvider proposalProvider = new XSDProposalProvider(proposals);
+		proposalProvider.setFiltering(true);
 		ContentProposalAdapter reqAdapter = new ContentProposalAdapter(txtRequestInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
 		ContentProposalAdapter resAdapter = new ContentProposalAdapter(txtResponseInput, controlContentAdapter, proposalProvider, keyStroke, autoActivationChars);
 	}
