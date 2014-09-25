@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="LectonSFXml2Xsd2Java"
+      label="LectonSFXml2Xsd2Java"
+      version="1.0.0.qualifier"
+      provider-name="TCS">
+
+   <description url="http://www.example.com/description">
+      1) Creates DataModel for PE/AL
+2) Generates Java files for given XSD files
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Owned by BNPP-Mobility, TCS.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      Lincensed to BNPP-Mobility, TCS.
+   </license>
+
+   <plugin
+         id="com.tcs.mobility.sf.lecton.xml2xsd2java"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.tcs.mobility.sf.lecton.xml2xsd2java.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

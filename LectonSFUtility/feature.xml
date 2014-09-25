@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="LectonSFUtility"
+      label="LectonSFUtility"
+      version="1.0.0.qualifier"
+      provider-name="TCS">
+
+   <description url="http://www.example.com/description">
+      1) Creates DataModel for PE/AL
+2) Generates Java files for given XSD files
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Owned by BNPP-Mobility, TCS.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      Lincensed to BNPP-Mobility, TCS.
+   </license>
+
+   <plugin
+         id="com.tcs.mobility.sf.lecton.utility"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
