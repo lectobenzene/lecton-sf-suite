@@ -15,6 +15,13 @@ import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.KeyedCollectionModel;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 
+/**
+ * This class is copied from the BTT plugin.
+ * No scope of modification here.
+ * 
+ * @author Saravana
+ *
+ */
 public class ContextParseLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
 	private Image image;

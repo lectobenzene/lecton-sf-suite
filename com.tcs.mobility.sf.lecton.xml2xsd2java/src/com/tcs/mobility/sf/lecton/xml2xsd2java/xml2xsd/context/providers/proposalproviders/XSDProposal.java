@@ -119,6 +119,10 @@ public class XSDProposal implements IContentProposal {
 		return xsdMap;
 	}
 
+	/**
+	 * 
+	 * @return Array of the proposal content
+	 */
 	public String[] getXsdContentArray() {
 		if (xsdMap == null) {
 			xsdMap = getFilledXsdMap();

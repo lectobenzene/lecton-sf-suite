@@ -84,13 +84,14 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 				try {
 					doFinish(className, pkgPath, commonPackageName, modulePackageName, packageName, isOnlyXSD, requestKColl, responseKColl, monitor);
 				} catch (MalformedTreeException e) {
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				} catch (JavaModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				} finally {
 					monitor.done();
 				}
@@ -100,10 +101,13 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		try {
 			getContainer().run(true, false, op);
 		} catch (InterruptedException e) {
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
-			e.printStackTrace();
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 			MessageDialog.openError(getShell(), "Error", realException.getMessage());
 			return false;
 		}
@@ -131,7 +135,6 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		// Construct the XSD location
 		IPath xsdLocationPath = new Path(project.getFullPath().toOSString()).append(JavaGenerator.PACKAGEROOT_RESOURCE).append(
 				JavaGenerator.PACKAGEROOT_XSD_LOCATION);
-		System.out.println(xsdLocationPath);
 		IResource resResource = UtilResource.getResourceHandle(xsdLocationPath.toOSString());
 
 		// Create the XSD location folder if not created
@@ -143,8 +146,6 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 		monitor.setTaskName("Creating XSD files");
 
 		// Create only the XSD file in the Resource folder.
-		System.out.println("ONLY XSD - WORKING");
-
 		// Create XSD
 		IFile requestXsdFile = createXsdFile(serviceName, requestKColl, JavaGenerator.XSD_NAME_REQUEST, monitor, resResource);
 		IFile responseXsdFile = createXsdFile(serviceName, responseKColl, JavaGenerator.XSD_NAME_RESPONSE, monitor, resResource);
@@ -229,11 +230,9 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
-				System.out.println("GENERATE JAVA JOB - STARTING : " + jobName);
 				WSConsole.i("Creating XSD Files - " + jobName);
 				javaGenerator.generateJava(project, directoryPath, xsdFile.getLocation().toOSString(), packageName, commonPackageName, site, true);
 				WSConsole.i("XSD Files created - " + jobName);
-				System.out.println("GENERATE JAVA JOB - FINISHING : " + jobName);
 				return Status.OK_STATUS;
 			}
 		};
@@ -257,11 +256,11 @@ public class NewDataModelWizard extends Wizard implements INewWizard {
 					OrganizeImportsAction org = new OrganizeImportsAction(site);
 					org.run(moduleUnit);
 				} catch (JavaModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				}
 				return Status.OK_STATUS;
 			}

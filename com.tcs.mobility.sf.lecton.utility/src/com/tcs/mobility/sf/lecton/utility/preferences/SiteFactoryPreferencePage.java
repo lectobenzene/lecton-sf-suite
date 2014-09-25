@@ -81,6 +81,9 @@ public class SiteFactoryPreferencePage extends PreferencePage implements IWorkbe
 		restoreDefaults();
 	}
 
+	/**
+	 * Apply the preferences. All newly added preferences should go here
+	 */
 	private void applyPreferences() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		preferenceStore.setValue(SiteFactoryPreferenceConstants.PREF_BOOLEAN_LOGGING_DEBUG, btnDebug.getSelection());
@@ -95,6 +98,9 @@ public class SiteFactoryPreferencePage extends PreferencePage implements IWorkbe
 		WSConsole.setLoggingPreferences();
 	}
 
+	/**
+	 * Restores the default state for the preferences
+	 */
 	private void restoreDefaults() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		btnDebug.setSelection(preferenceStore.getDefaultBoolean(SiteFactoryPreferenceConstants.PREF_BOOLEAN_LOGGING_DEBUG));
@@ -103,6 +109,9 @@ public class SiteFactoryPreferencePage extends PreferencePage implements IWorkbe
 
 	}
 
+	/**
+	 * Initialize the states of preferences when the preferences is opened
+	 */
 	private void initialize() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		btnDebug.setSelection(preferenceStore.getBoolean(SiteFactoryPreferenceConstants.PREF_BOOLEAN_LOGGING_DEBUG));

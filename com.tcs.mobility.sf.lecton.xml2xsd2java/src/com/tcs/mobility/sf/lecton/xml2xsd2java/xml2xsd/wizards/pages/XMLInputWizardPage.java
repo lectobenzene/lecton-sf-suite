@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import com.tcs.mobility.sf.lecton.bttsource.errorhandler.IMessageInjector;
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.KeyedCollectionModel;
 import com.tcs.mobility.sf.lecton.bttsource.parsers.context.DataModelParser;
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.Activator;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.contentprovider.ContextContentProvider;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.labelprovider.ContextParseLabelProvider;
@@ -171,8 +172,9 @@ public class XMLInputWizardPage extends WizardPage implements IMessageInjector {
 
 		try {
 			setContentProposal();
-		} catch (ParseException e1) {
-			e1.printStackTrace();
+		} catch (ParseException e) {
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 	}
 

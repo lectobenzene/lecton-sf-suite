@@ -16,6 +16,8 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
+
 public class JavaRefactor {
 
 	public void moveClass(IPackageFragmentRoot root, String destinationPackage, ICompilationUnit[] filesToMove) {
@@ -41,11 +43,11 @@ public class JavaRefactor {
 			change.perform(monitor);
 
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 	}
 }

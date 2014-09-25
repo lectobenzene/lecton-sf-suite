@@ -2,7 +2,13 @@ package com.tcs.mobility.sf.lecton.xml2xsd2java.xml2xsd.context.providers.propos
 
 public class XSDInfo {
 
+	/**
+	 * Label to be shown during the proposal is being popped up
+	 */
 	private String label;
+	/**
+	 * The description to be shown during the proposal is being popped up
+	 */
 	private String description;
 
 	public XSDInfo(String label, String description) {

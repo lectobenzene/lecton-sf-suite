@@ -8,7 +8,6 @@ class XsdParser {
 	public static final String ATTRIBUTE_NAME = 'name'
 
 	public XsdParser() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(def args){

@@ -12,7 +12,6 @@ public class XsdToJavaGenerator {
 	public static final int TYPE_STANDARD = 0;
 
 	public static void main(String[] args) {
-		System.out.println("I am Iron Man...");
 		String[] argArray = { "-Xxew", "-disableXmlSecurity", "-d",
 				"C:\\Users\\Saravana\\runtime-EclipseApplicationLuna\\BE_FORTIS_DBIA-ap01-module\\src\\main\\java", "-p",
 				"com.bnppf.adm.easybanking.dbia.al.message.getAccountList",
@@ -22,41 +21,32 @@ public class XsdToJavaGenerator {
 
 				@Override
 				public void warning(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Warning");
 					showError(arg0);
 				}
 
 				@Override
 				public void info(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Info");
 					showError(arg0);
 				}
 
 				@Override
 				public void fatalError(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Fatal Error");
 					showError(arg0);
 				}
 
 				@Override
 				public void error(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Error");
 					showError(arg0);
 				}
 
-				private void showError(SAXParseException arg0) {
-					System.out.println(arg0.getLocalizedMessage());
-					System.out.println(arg0.getMessage());
-					System.out.println(arg0.getStackTrace());
+				private void showError(SAXParseException e) {
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				}
 			});
 		} catch (BadCommandLineException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 	}
 
@@ -93,41 +83,32 @@ public class XsdToJavaGenerator {
 
 				@Override
 				public void warning(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Warning");
 					showError(arg0);
 				}
 
 				@Override
 				public void info(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Info");
 					showError(arg0);
 				}
 
 				@Override
 				public void fatalError(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Fatal Error");
 					showError(arg0);
 				}
 
 				@Override
 				public void error(SAXParseException arg0) {
-					// TODO Auto-generated method stub
-					System.out.println("Error");
 					showError(arg0);
 				}
 
-				private void showError(SAXParseException arg0) {
-					System.out.println(arg0.getLocalizedMessage());
-					System.out.println(arg0.getMessage());
-					System.out.println(arg0.getStackTrace());
+				private void showError(SAXParseException e) {
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				}
 			});
 		} catch (BadCommandLineException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 	}
 }

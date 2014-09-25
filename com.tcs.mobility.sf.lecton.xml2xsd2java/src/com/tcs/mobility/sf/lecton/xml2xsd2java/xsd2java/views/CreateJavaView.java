@@ -41,7 +41,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 import com.tcs.mobility.sf.lecton.xml2xsd.source.parser.XsdParser;
+import com.tcs.mobility.sf.lecton.xml2xsd2java.listeners.JobChangeListener;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.utils.Utility;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.JavaRefactor;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.xsd2java.controller.XsdToJavaGenerator;
@@ -83,7 +85,6 @@ public class CreateJavaView extends ViewPart {
 	private Button btnObtainPath;
 
 	public CreateJavaView() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -170,12 +171,10 @@ public class CreateJavaView extends ViewPart {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
 				ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
 						.getSelection("org.eclipse.jdt.ui.PackageExplorer");
 				if (selection instanceof IStructuredSelection) {
 					Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-					System.out.println(firstElement.getClass());
 					if (firstElement instanceof IResource) {
 						IPath projectRelativePath = ((IResource) firstElement).getProjectRelativePath();
 						final IProject project = ((IResource) firstElement).getProject();
@@ -186,14 +185,11 @@ public class CreateJavaView extends ViewPart {
 						}
 
 						IPath location = project.getLocation();
-						System.out.println(location.toOSString());
 						location = location.append(PACKAGEROOT_SRC);
-						System.out.println(location.toOSString());
 						txtDirPath.setText(location.toOSString());
 						txtXsdPath.setText(((IResource) firstElement).getLocation().toOSString());
 
 						String xsdName = ((IResource) firstElement).getName().split("\\.")[0];
-						System.out.println(xsdName);
 						String packageEndName;
 						if (xsdName.endsWith(XSD_NAME_REQUEST)) {
 							packageEndName = xsdName.substring(0, xsdName.indexOf(XSD_NAME_REQUEST));
@@ -204,6 +200,7 @@ public class CreateJavaView extends ViewPart {
 							// XSD Name should end with Request or Response OR
 							// the XSD
 							// name is used as package name
+							WSConsole.d("XSD Name did not end with Request or Response, hence name is used as package name");
 							packageEndName = xsdName;
 						}
 
@@ -217,15 +214,11 @@ public class CreateJavaView extends ViewPart {
 							IPackageFragment packageFragment = packageRoot.getPackageFragment(txtPackPath.getText());
 							if (packageFragment.exists()) {
 								javaFilesAlreadyPresents = packageFragment.getCompilationUnits();
-								System.out.println("EXISTING JAVA");
-								for (ICompilationUnit unitss : javaFilesAlreadyPresents) {
-									System.out.println(unitss.getElementName());
-								}
 							}
 
-						} catch (JavaModelException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
+						} catch (JavaModelException e1) {
+							WSConsole.e(e1.getMessage());
+							WSConsole.e(e1);
 						}
 
 						final Job job = new UIJob("Generate Java") {
@@ -245,15 +238,14 @@ public class CreateJavaView extends ViewPart {
 
 							@Override
 							public IStatus runInUIThread(IProgressMonitor monitor) {
-								System.out.println("JOB IS OK");
 								// Adding SOURCE FOLDER to classpath
 
 								IClasspathEntry[] entries = null;
 								try {
 									entries = javaProject.getRawClasspath();
-								} catch (JavaModelException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+								} catch (JavaModelException e) {
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								}
 
 								// Check if src/main/java is in the ClassPath
@@ -264,11 +256,8 @@ public class CreateJavaView extends ViewPart {
 
 								for (IClasspathEntry entry : entries) {
 									if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE && entry.getPath().segmentCount() > 3) {
-										System.out.println("HELLO :" + entry.getPath().toOSString());
 										srcOriginalTrailingPath = entry.getPath().removeFirstSegments(entry.getPath().segmentCount() - 3);
-										System.out.println(srcOriginalTrailingPath.toOSString());
 										if (srcTrailingPath.equals(srcOriginalTrailingPath)) {
-											System.out.println("EQUAL");
 											srcFolderMissing = false;
 											break;
 										}
@@ -288,9 +277,9 @@ public class CreateJavaView extends ViewPart {
 									newEntries[entries.length] = JavaCore.newSourceEntry(srcEntry.getPath());
 									try {
 										javaProject.setRawClasspath(newEntries, null);
-									} catch (JavaModelException e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
+									} catch (JavaModelException e) {
+										WSConsole.e(e.getMessage());
+										WSConsole.e(e);
 									}
 								}
 
@@ -301,8 +290,6 @@ public class CreateJavaView extends ViewPart {
 									IPackageFragmentRoot packageRoot = javaProject.findPackageFragmentRoot(packageRootPath);
 									packageRoot.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 									IPackageFragment packageFragment = packageRoot.getPackageFragment(txtPackPath.getText());
-									System.out.println(packageFragment.exists());
-									System.out.println(packageFragment.getPath());
 
 									final ICompilationUnit[] javaFilesCreated = packageFragment.getCompilationUnits();
 									final List<String> primaryElements = new XsdParser().getPrimaryElements(new File(txtXsdPath.getText()));
@@ -316,85 +303,39 @@ public class CreateJavaView extends ViewPart {
 											}
 										}
 									}
-									System.out.println("UNITS TO MOVE");
-									for (ICompilationUnit unit : unitsToMove) {
-										System.out.println(unit.getElementName());
-									}
 
-									System.out.println(javaFilesAlreadyPresents == null);
 									if (javaFilesAlreadyPresents != null) {
-										System.out.println(javaFilesAlreadyPresents.length);
 										unitsToMove.removeAll(Arrays.asList(javaFilesAlreadyPresents));
-										for (ICompilationUnit unitss : javaFilesAlreadyPresents) {
-											System.out.println(unitss.getElementName());
-										}
 									}
-									System.out.println(unitsToMove.size());
 									String destinationPackage = txtNewPath.getText();
 									ICompilationUnit[] filesToMove = {};
 									new JavaRefactor().moveClass(packageRoot, destinationPackage, unitsToMove.toArray(filesToMove));
 
-								} catch (JavaModelException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+								} catch (JavaModelException e) {
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								} catch (CoreException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								}
 								return Status.OK_STATUS;
 							}
 						};
 
 						final IJobManager manager = Job.getJobManager();
-						final IJobChangeListener listener = new IJobChangeListener() {
-
-							@Override
-							public void sleeping(IJobChangeEvent event) {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
-							public void scheduled(IJobChangeEvent event) {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
-							public void running(IJobChangeEvent event) {
-								// TODO Auto-generated method stub
-
-							}
-
+						final IJobChangeListener listener = new JobChangeListener() {
 							@Override
 							public void done(IJobChangeEvent event) {
-								System.out.println(event.getJob().getName().equalsIgnoreCase(job.getName()));
-								// TODO Auto-generated method stub
 								if (event.getJob().getName().equalsIgnoreCase(job.getName())) {
-									System.out.println("JOB IS DONE - JAVA CREATED");
 									secondJob.schedule();
 									manager.removeJobChangeListener(this);
 								}
-							}
-
-							@Override
-							public void awake(IJobChangeEvent event) {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
-							public void aboutToRun(IJobChangeEvent event) {
-								// TODO Auto-generated method stub
-
 							}
 						};
 						manager.addJobChangeListener(listener);
 
 					} else if (firstElement instanceof IJavaElement) {
 						IPath path = ((IJavaElement) firstElement).getPath();
-
-						System.out.println(path.toOSString());
 						txtXsdPath.setText(((IJavaElement) firstElement).getResource().getLocation().toOSString());
 					}
 				}

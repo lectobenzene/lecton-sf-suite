@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
+
 public class XSDProposalProvider implements IContentProposalProvider {
 
 	/*
@@ -38,6 +40,7 @@ public class XSDProposalProvider implements IContentProposalProvider {
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		if (filterProposals) {
+			WSConsole.i("Filtering is enabled for the Field proposal");
 			ArrayList<XSDProposal> list = new ArrayList<XSDProposal>();
 			for (int i = 0; i < proposals.length; i++) {
 				if (proposals[i].length() >= contents.length() && proposals[i].substring(0, contents.length()).equalsIgnoreCase(contents)) {

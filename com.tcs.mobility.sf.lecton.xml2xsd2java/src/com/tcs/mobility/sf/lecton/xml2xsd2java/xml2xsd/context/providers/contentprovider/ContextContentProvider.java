@@ -10,6 +10,13 @@ import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.KeyedCollectionModel;
 import com.tcs.mobility.sf.lecton.bttsource.models.context.elements.dataelements.parent.DataElementModel;
 
+/**
+ * This class is copied from the BTT plugin.
+ * No scope of modification here.
+ * 
+ * @author Saravana
+ *
+ */
 public class ContextContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
 	public Object[] getChildren(Object parentElement) {

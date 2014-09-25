@@ -7,38 +7,32 @@ public class JobChangeListener implements IJobChangeListener {
 
 	@Override
 	public void aboutToRun(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 	@Override
 	public void awake(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 	@Override
 	public void done(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 	@Override
 	public void running(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 	@Override
 	public void scheduled(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 	@Override
 	public void sleeping(IJobChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// Nothing
 	}
 
 }

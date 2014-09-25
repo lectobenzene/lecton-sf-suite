@@ -140,12 +140,11 @@ public class JavaGenerator {
 			packageRoot = javaProject.findPackageFragmentRoot(packageRootPath);
 			IPackageFragment packageFragment = packageRoot.getPackageFragment(packagePath);
 			if (packageFragment.exists()) {
-				System.out.println("Package Exists");
 				javaFilesAlreadyPresent = packageFragment.getCompilationUnits();
 			}
-		} catch (JavaModelException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+		} catch (JavaModelException e) {
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 
 		// Create Jobs for Generating and Moving java
@@ -205,7 +204,6 @@ public class JavaGenerator {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				WSConsole.i("PropOrder correction Starting");
-				System.out.println("REASSIGN PROP ORDER - STARTING");
 				if (unitsForPropOrdering != null) {
 					new JavaPropOrderer().runPropOrder(unitsForPropOrdering);
 				}
@@ -221,7 +219,6 @@ public class JavaGenerator {
 					}
 				}
 				WSConsole.i("Organize Imports done");
-				System.out.println("REASSIGN PROP ORDER - FINISHED");
 				return Status.OK_STATUS;
 			}
 		};
@@ -246,7 +243,6 @@ public class JavaGenerator {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 
-				System.out.println("ASSIGN MOVE JAVA JOB - STARTING");
 				// Adding SOURCE FOLDER to classpath
 				addSourceFolderToClasspath(javaProject);
 
@@ -262,12 +258,9 @@ public class JavaGenerator {
 
 					List<ICompilationUnit> javaFilesCreated = new LinkedList<ICompilationUnit>(Arrays.asList(javaFilesInPackage));
 					for (ICompilationUnit iCompilationUnit : javaFilesCreated) {
-						System.out.println(iCompilationUnit.getElementName());
 					}
 					if (javaFilesAlreadyPresent != null) {
-						System.out.println("COMP");
 						for (ICompilationUnit iCompilationUnit2 : javaFilesAlreadyPresent) {
-							System.out.println(iCompilationUnit2.getElementName());
 						}
 						List<ICompilationUnit> asList = Arrays.asList(javaFilesAlreadyPresent);
 						javaFilesCreated.removeAll(asList);
@@ -287,14 +280,14 @@ public class JavaGenerator {
 								try {
 									implementSerializable(unit);
 								} catch (IllegalArgumentException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								} catch (MalformedTreeException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								} catch (BadLocationException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									WSConsole.e(e.getMessage());
+									WSConsole.e(e);
 								}
 							}
 						}
@@ -328,11 +321,11 @@ public class JavaGenerator {
 									try {
 										updateNamespace(type, annotationsMap);
 									} catch (MalformedTreeException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+										WSConsole.e(e.getMessage());
+										WSConsole.e(e);
 									} catch (BadLocationException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+										WSConsole.e(e.getMessage());
+										WSConsole.e(e);
 									}
 								}
 							}
@@ -357,7 +350,6 @@ public class JavaGenerator {
 							unitsToMove.add(javaFile);
 						}
 					}
-					System.out.println("Units To Move : " + unitsToMove.size());
 
 					/*
 					 * If units with same name is present in both source and
@@ -385,7 +377,6 @@ public class JavaGenerator {
 							// Check if the Unit is already present in the
 							// Destination package
 							if (cuTarget.exists()) {
-								System.out.println("Unit already present in Destination");
 								unitsForPropOrdering.add(cuTarget);
 
 								IField[] fieldsSource = type.getFields();
@@ -401,8 +392,6 @@ public class JavaGenerator {
 								fieldsToMove.addAll(Arrays.asList(fieldsSource));
 								methodsToMove.addAll(Arrays.asList(methodsSource));
 
-								System.out.println(fieldsToMove.size());
-								System.out.println(methodsToMove.size());
 
 								for (IField fieldSource : fieldsSource) {
 									for (IField fieldTarget : fieldsTarget) {
@@ -422,8 +411,6 @@ public class JavaGenerator {
 									}
 								}
 
-								System.out.println(fieldsToMove.size());
-								System.out.println(methodsToMove.size());
 
 								for (IField field : fieldsToMove) {
 									field.move(typeTarget, null, null, false, monitor);
@@ -434,13 +421,11 @@ public class JavaGenerator {
 
 								IImportDeclaration[] importsSource = unit.getImports();
 								for (IImportDeclaration importSource : importsSource) {
-									System.out.println(importSource.getElementName());
-									System.out.println(importSource.getSource());
 
 									IJavaElement[] findElements = cuTarget.findElements(importSource);
 									if (findElements != null) {
 										for (IJavaElement iJavaElement : findElements) {
-											System.out.println("FOUND : " + iJavaElement.getElementName());
+											// TODO : Suspected error block
 										}
 									} else {
 										importSource.move(cuTarget, null, null, false, monitor);
@@ -451,8 +436,6 @@ public class JavaGenerator {
 								// methods
 								unit.delete(true, null);
 
-								System.out.println(unitsToMove.size());
-								System.out.println("DONE SUCCESSFULLY");
 							} else {
 								finalUnitsToMove.add(unit);
 							}
@@ -461,15 +444,14 @@ public class JavaGenerator {
 					ICompilationUnit[] filesToMove = {};
 					new JavaRefactor().moveClass(packageRoot, commonPackagePath, finalUnitsToMove.toArray(filesToMove));
 
-				} catch (JavaModelException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (JavaModelException e) {
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e.getMessage());
+					WSConsole.e(e);
 				}
 
-				System.out.println("ASSIGN MOVE JAVA JOB - FINISHED");
 				return Status.OK_STATUS;
 			}
 
@@ -493,10 +475,8 @@ public class JavaGenerator {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				WSConsole.i("Java Files being created");
-				System.out.println("ASSIGN GENRATE JAVA JOB - STARTING");
 				new XsdToJavaGenerator().generate(directoryPath, packagePath, xsdPath, isXMLWrapperEnabled ? XsdToJavaGenerator.TYPE_ADVANCED
 						: XsdToJavaGenerator.TYPE_STANDARD);
-				System.out.println("ASSIGN GENRATE JAVA JOB - FINISHED");
 				WSConsole.i("Java Files created");
 				return Status.OK_STATUS;
 			}
@@ -515,9 +495,9 @@ public class JavaGenerator {
 		IClasspathEntry[] entries = null;
 		try {
 			entries = javaProject.getRawClasspath();
-		} catch (JavaModelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (JavaModelException e) {
+			WSConsole.e(e.getMessage());
+			WSConsole.e(e);
 		}
 
 		// Check if src/main/java is in the ClassPath
@@ -547,9 +527,9 @@ public class JavaGenerator {
 			newEntries[entries.length] = JavaCore.newSourceEntry(srcEntry.getPath());
 			try {
 				javaProject.setRawClasspath(newEntries, null);
-			} catch (JavaModelException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (JavaModelException e) {
+				WSConsole.e(e.getMessage());
+				WSConsole.e(e);
 			}
 		}
 	}
@@ -580,9 +560,9 @@ public class JavaGenerator {
 		if (object instanceof TypeDeclaration) {
 			superTypes = ((TypeDeclaration) object).superInterfaceTypes();
 		} else if (object instanceof EnumDeclaration) {
-			System.out.println("ENUM Declaration : propOrder not applicable");
+			WSConsole.d("ENUM Declaration : propOrder not applicable");
 		} else {
-			System.out.println("Type class : " + object.getClass());
+			WSConsole.d("Type class : " + object.getClass());
 		}
 
 		if (superTypes != null) {
@@ -638,20 +618,12 @@ public class JavaGenerator {
 			javaDoc = ((TypeDeclaration) object).getJavadoc();
 			bodyDeclarations = ((TypeDeclaration) object).bodyDeclarations();
 		} else if (object instanceof EnumDeclaration) {
-			System.out.println("ENUM Declaration : propOrder not applicable");
+			WSConsole.d("ENUM Declaration : propOrder not applicable");
 		} else {
-			System.out.println("Type class : " + object.getClass());
+			WSConsole.d("Type class : " + object.getClass());
 		}
 
 		Map<String, String> javaDocNamespaceMap = getJavaDocNamespaceMap(javaDoc);
-		if (javaDoc != null) {
-			for (String annotationKey : annotationsMap.keySet()) {
-				System.out.println("AN : " + annotationKey + " : " + annotationsMap.get(annotationKey));
-			}
-			for (String nameSpaceKey : javaDocNamespaceMap.keySet()) {
-				System.out.println("NS : " + nameSpaceKey + " : " + javaDocNamespaceMap.get(nameSpaceKey));
-			}
-		}
 
 		if (javaDocNamespaceMap.size() != 0) {
 			if (bodyDeclarations != null) {
@@ -664,7 +636,6 @@ public class JavaGenerator {
 							List<MemberValuePair> values = annotation.values();
 							for (MemberValuePair pair : values) {
 								String identifier = pair.getName().getIdentifier();
-								System.out.println("ID : " + identifier);
 								if ("namespace".equals(identifier)) {
 									// If namespace is already present,
 									// then don't update
@@ -674,7 +645,6 @@ public class JavaGenerator {
 									Expression value = pair.getValue();
 									if (value instanceof StringLiteral) {
 										String literalValue = ((StringLiteral) value).getLiteralValue();
-										System.out.println("LV : " + literalValue);
 										annotationName = literalValue;
 									}
 								}

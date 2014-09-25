@@ -25,6 +25,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 import com.tcs.mobility.sf.lecton.xml2xsd2java.utils.Utility;
 
 public class JavaPropOrderer {
@@ -48,9 +49,9 @@ public class JavaPropOrderer {
 				if (object instanceof TypeDeclaration) {
 					modifiers = ((TypeDeclaration) object).modifiers();
 				} else if (object instanceof EnumDeclaration) {
-					System.out.println("ENUM Declaration : propOrder not applicable");
+					WSConsole.d("ENUM Declaration : propOrder not applicable");
 				} else {
-					System.out.println("Type class : " + object.getClass());
+					WSConsole.d("Type class : " + object.getClass());
 				}
 
 				if (modifiers != null) {
@@ -75,15 +76,15 @@ public class JavaPropOrderer {
 				unit.getBuffer().setContents(newSource);
 				unit.getBuffer().save(null, true);
 
-			} catch (JavaModelException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (MalformedTreeException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (BadLocationException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (JavaModelException e) {
+				WSConsole.e(e.getMessage());
+				WSConsole.e(e);
+			} catch (MalformedTreeException e) {
+				WSConsole.e(e.getMessage());
+				WSConsole.e(e);
+			} catch (BadLocationException e) {
+				WSConsole.e(e.getMessage());
+				WSConsole.e(e);
 			}
 
 		}
