@@ -37,7 +37,7 @@ public class JavaPropOrderer {
 				document = new Document(unit.getSource());
 				String typeName = Utility.getFileNameWithoutExtension(unit.getElementName());
 
-				ASTParser parser = ASTParser.newParser(AST.JLS8);
+				ASTParser parser = ASTParser.newParser(JavaGenerator.AST_LEVEL);
 				parser.setSource(unit);
 				CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
 

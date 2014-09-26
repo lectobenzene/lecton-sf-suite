@@ -105,6 +105,8 @@ public class JavaGenerator {
 	public static final String EXTENSION_XSD = ".xsd";
 	public static final String EXTENSION_JAVA = ".java";
 
+	public static final int AST_LEVEL = AST.JLS3;
+	
 	private boolean isXMLWrapperEnabled = false;
 	private boolean isNamespaceEnabled = false;
 
@@ -547,7 +549,7 @@ public class JavaGenerator {
 	private void implementSerializable(ICompilationUnit unit) throws JavaModelException, IllegalArgumentException, MalformedTreeException,
 			BadLocationException {
 		// parse compilation unit
-		final ASTParser parser = ASTParser.newParser(AST.JLS8);
+		final ASTParser parser = ASTParser.newParser(AST_LEVEL);
 		parser.setSource(unit);
 		final CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
 
@@ -601,7 +603,7 @@ public class JavaGenerator {
 	private void updateNamespace(IType type, Map<String, String> annotationsMap) throws JavaModelException, MalformedTreeException,
 			BadLocationException {
 		// parse compilation unit
-		final ASTParser parser = ASTParser.newParser(AST.JLS8);
+		final ASTParser parser = ASTParser.newParser(AST_LEVEL);
 		ICompilationUnit unit = type.getCompilationUnit();
 		parser.setSource(unit);
 		final CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
