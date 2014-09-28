@@ -67,8 +67,8 @@ class XsdBuilder {
 
 	private def checkForExistence(DataElementModel model){
 		String xml =  build(model)
+		xml = xml.substring(xml.indexOf("<xs:complexType"))
 		def readLines = xml.readLines()
-		readLines.remove(0)
 		readLines.remove(readLines.size()-1)
 		return readLines
 	}
