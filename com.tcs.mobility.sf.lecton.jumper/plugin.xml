@@ -6,8 +6,9 @@
       <hyperlinkDetector
             activate="true"
             class="com.tcs.mobility.sf.lecton.jumper.detectors.HyperlinkDetectorsService"
+            description="Detects the @Service hyperlink"
             id="com.tcs.mobility.sf.lecton.jumper.hyperlinkDetectorService"
-            name="hyperlink_service"
+            name="SF_Service"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
    </extension>
