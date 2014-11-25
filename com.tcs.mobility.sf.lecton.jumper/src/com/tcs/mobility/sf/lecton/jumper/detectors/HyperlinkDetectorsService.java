@@ -15,16 +15,11 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 
+import com.tcs.mobility.sf.lecton.jumper.hyperlinks.AbstractHyperlink;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ReverseServiceHyperlink;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ServiceHyperlink;
 
 public class HyperlinkDetectorsService extends AbstractHyperlinkDetector {
-
-	/** Pattern to go from Java to XML */
-	public static final String SF_SERVICE = "@Service\\(\"([^\"]*)\"\\)";
-
-	/** Pattern to go from XML to Java */
-	public static final String SF_REVERSE_SERVICE = "service-ref=\"([^\"]*)\"";
 
 	/** Flag for Jumping from Java to XML */
 	public static final int HYPERLINK_TYPE_NORMAL = 1;
@@ -38,8 +33,8 @@ public class HyperlinkDetectorsService extends AbstractHyperlinkDetector {
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
-		Pattern patternService = Pattern.compile(SF_SERVICE);
-		Pattern patternReverseService = Pattern.compile(SF_REVERSE_SERVICE);
+		Pattern patternService = Pattern.compile(AbstractHyperlink.SF_SERVICE);
+		Pattern patternReverseService = Pattern.compile(AbstractHyperlink.SF_REVERSE_SERVICE);
 
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();

@@ -16,8 +16,6 @@ import com.tcs.mobility.sf.lecton.jumper.models.FileInformation;
 
 public class ServiceHyperlink extends AbstractHyperlink {
 
-	private static final String LOCATION_SPRING_FILES = "src/main/resources/META-INF/spring";
-	private static final String SERVICE_REF = "service-ref=\"";
 	private final IRegion targetRegion;
 	private final String serviceName;
 	private final IProject project;
@@ -50,7 +48,7 @@ public class ServiceHyperlink extends AbstractHyperlink {
 		IFolder folder = project.getFolder(LOCATION_SPRING_FILES);
 		FileInformation info = getFileInformation(folder);
 
-		openFileInEditor(info.getFile(), info.getOffset(), SERVICE_REF, serviceName);
+		openFileInEditor(info.getFile(), info.getOffset(), SERVICE_REF_XML, serviceName);
 
 	}
 
@@ -71,7 +69,7 @@ public class ServiceHyperlink extends AbstractHyperlink {
 					ITextFileBuffer textFileBuffer = bufferManager.getTextFileBuffer(iResource.getFullPath(), LocationKind.IFILE);
 					IDocument document = textFileBuffer.getDocument();
 
-					int index = document.get().indexOf(SERVICE_REF + serviceName + "\"");
+					int index = document.get().indexOf(SERVICE_REF_XML + serviceName + "\"");
 
 					// Dispose the buffers
 					textFileBuffer = null;

@@ -12,6 +12,15 @@ import org.eclipse.ui.ide.IDE;
 
 public abstract class AbstractHyperlink implements IHyperlink {
 
+	public static final String LOCATION_SPRING_FILES = "src/main/resources/META-INF/spring";
+	public static final String SERVICE_REF_XML = "service-ref=\"";
+	public static final String LOCATION_JAVA_FILES = "src/main/java";
+	public static final String SERVICE_REF_JAVA = "@Service(\"";
+	/** Pattern to go from Java to XML */
+	public static final String SF_SERVICE = "@Service\\(\"([^\"]*)\"\\)";
+	/** Pattern to go from XML to Java */
+	public static final String SF_REVERSE_SERVICE = "service-ref=\"([^\"]*)\"";
+
 	/**
 	 * Opens the file in the editor
 	 * 

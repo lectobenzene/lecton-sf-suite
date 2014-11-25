@@ -16,8 +16,6 @@ import com.tcs.mobility.sf.lecton.jumper.models.FileInformation;
 
 public class ReverseServiceHyperlink extends AbstractHyperlink {
 
-	private static final String LOCATION_JAVA_FILES = "src/main/java";
-	private static final String SERVICE_REF = "@Service(\"";
 	private final IRegion targetRegion;
 	private final String serviceName;
 	private final IProject project;
@@ -50,7 +48,7 @@ public class ReverseServiceHyperlink extends AbstractHyperlink {
 		IFolder folder = project.getFolder(LOCATION_JAVA_FILES);
 		FileInformation info = getFileInformation(folder);
 		if (info != null) {
-			openFileInEditor(info.getFile(), info.getOffset(), SERVICE_REF, serviceName);
+			openFileInEditor(info.getFile(), info.getOffset(), SERVICE_REF_JAVA, serviceName);
 		}
 	}
 
@@ -72,8 +70,8 @@ public class ReverseServiceHyperlink extends AbstractHyperlink {
 					ITextFileBuffer textFileBuffer = bufferManager.getTextFileBuffer(iResource.getFullPath(), LocationKind.IFILE);
 					IDocument document = textFileBuffer.getDocument();
 
-					int index = document.get().indexOf(SERVICE_REF + serviceName + "\")");
-					System.out.println(SERVICE_REF + serviceName + "\")");
+					int index = document.get().indexOf(AbstractHyperlink.SERVICE_REF_JAVA + serviceName + "\")");
+					System.out.println(SERVICE_REF_JAVA + serviceName + "\")");
 
 					// Dispose the buffers
 					textFileBuffer = null;
