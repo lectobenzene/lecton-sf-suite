@@ -62,5 +62,48 @@
             commandId="com.tcs.mobility.sf.lecton.jumper.analyzespringbinding">
       </handler>
    </extension>
+   <extension
+         id="com.tcs.mobility.sf.lecton.jumper.servicedeclarationmarker"
+         name="ServiceDeclaration Marker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.textmarker">
+      </super>
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="false">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerSeverity="1"
+            markerType="com.tcs.mobility.sf.lecton.jumper.servicedeclarationmarker"
+            name="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation">
+      </type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation"
+            colorPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.color"
+            colorPreferenceValue="255,0,0"
+            contributesToHeader="true"
+            highlightPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.highlight"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="true"
+            label="Missing Service Declaration"
+            overviewRulerPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.overview"
+            overviewRulerPreferenceValue="true"
+            presentationLayer="0"
+            textPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.text"
+            textPreferenceValue="true"
+            textStylePreferenceValue="SQUIGGLES"
+            verticalRulerPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.ruler"
+            verticalRulerPreferenceValue="true">
+      </specification>
+   </extension>
 
 </plugin>
