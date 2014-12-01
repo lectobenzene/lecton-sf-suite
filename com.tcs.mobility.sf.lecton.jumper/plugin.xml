@@ -89,10 +89,10 @@
       <specification
             annotationType="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation"
             colorPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.color"
-            colorPreferenceValue="255,0,0"
+            colorPreferenceValue="255,90,0"
             contributesToHeader="true"
             highlightPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.highlight"
-            highlightPreferenceValue="true"
+            highlightPreferenceValue="false"
             includeOnPreferencePage="true"
             label="Missing Service Declaration"
             overviewRulerPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.overview"
@@ -100,6 +100,7 @@
             presentationLayer="0"
             textPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.text"
             textPreferenceValue="true"
+            textStylePreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.textstyle"
             textStylePreferenceValue="SQUIGGLES"
             verticalRulerPreferenceKey="com.tcs.mobility.sf.lecton.jumper.servicedeclarationannotation.ruler"
             verticalRulerPreferenceValue="true">

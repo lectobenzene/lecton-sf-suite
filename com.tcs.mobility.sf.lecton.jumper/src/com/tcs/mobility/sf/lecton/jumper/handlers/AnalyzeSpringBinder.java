@@ -130,16 +130,20 @@ public class AnalyzeSpringBinder extends AbstractHandler {
 						if (servicesDeclared.contains(serviceName)) {
 							System.out.println("Service Found");
 							// Delete the marker if present
+							iResource.deleteMarkers(MARKER_SERVICE_DECLARATION, false, IResource.DEPTH_ZERO);
 						} else {
 							System.out.println("Service Not Found");
 							// create a marker, if not already created
-							IMarker marker = iResource.createMarker(MARKER_SERVICE_DECLARATION);
-							marker.setAttribute(IMarker.TEXT, serviceName);
-							marker.setAttribute(IMarker.MESSAGE, "Service Declaration Missing");
-							marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_WARNING);
-							marker.setAttribute(IMarker.LINE_NUMBER, document.getLineOffset(index));
-							marker.setAttribute(IMarker.CHAR_START, index + AbstractHyperlink.SERVICE_REF_JAVA.length());
-							marker.setAttribute(IMarker.CHAR_END, index + AbstractHyperlink.SERVICE_REF_JAVA.length()+serviceName.length());
+							IMarker[] existingMarkers = iResource.findMarkers(MARKER_SERVICE_DECLARATION, false, IResource.DEPTH_ZERO);
+							if(existingMarkers.length == 0){
+								IMarker marker = iResource.createMarker(MARKER_SERVICE_DECLARATION);
+								marker.setAttribute(IMarker.TEXT, serviceName);
+								marker.setAttribute(IMarker.MESSAGE, "Service Declaration Missing");
+								marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_WARNING);
+								//marker.setAttribute(IMarker.LINE_NUMBER, document.getLineOffset(index));
+								marker.setAttribute(IMarker.CHAR_START, index + AbstractHyperlink.SERVICE_REF_JAVA.length());
+								marker.setAttribute(IMarker.CHAR_END, index + AbstractHyperlink.SERVICE_REF_JAVA.length()+serviceName.length());
+							}
 						}
 					}
 
@@ -152,9 +156,6 @@ public class AnalyzeSpringBinder extends AbstractHandler {
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
