@@ -10,6 +10,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
+
 public abstract class AbstractHyperlink implements IHyperlink {
 
 	public static final String LOCATION_SPRING_FILES = "src/main/resources/META-INF/spring";
@@ -42,16 +44,16 @@ public abstract class AbstractHyperlink implements IHyperlink {
 			try {
 				IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), marker);
 			} catch (PartInitException e) {
-				// TODO log
+				WSConsole.e(e);
 			}
 		} catch (CoreException e1) {
-			// TODO log
+			WSConsole.e(e1);
 		} finally {
 			try {
 				if (marker != null)
 					marker.delete();
 			} catch (CoreException e) {
-				// TODO log
+				WSConsole.e(e);
 			}
 		}
 	}

@@ -13,6 +13,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 
 import com.tcs.mobility.sf.lecton.jumper.models.FileInformation;
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 
 public class ReverseServiceHyperlink extends AbstractHyperlink {
 
@@ -88,8 +89,7 @@ public class ReverseServiceHyperlink extends AbstractHyperlink {
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e);
 		}
 		return null;
 	}

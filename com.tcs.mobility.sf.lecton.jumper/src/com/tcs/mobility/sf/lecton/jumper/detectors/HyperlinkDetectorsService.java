@@ -18,6 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.AbstractHyperlink;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ReverseServiceHyperlink;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ServiceHyperlink;
+import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 
 public class HyperlinkDetectorsService extends AbstractHyperlinkDetector {
 
@@ -50,8 +51,7 @@ public class HyperlinkDetectorsService extends AbstractHyperlinkDetector {
 			lineRegion = document.getLineInformationOfOffset(offset);
 			matchLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WSConsole.e(e);
 		}
 
 		IHyperlink[] hyperlinks = null;
@@ -114,8 +114,7 @@ public class HyperlinkDetectorsService extends AbstractHyperlinkDetector {
 						return new IHyperlink[] { hyperlink };
 					}
 				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSConsole.e(e);
 				}
 			}
 		}
