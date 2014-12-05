@@ -33,8 +33,6 @@ public class HyperlinkDetectorsConfig extends AbstractHyperlinkDetector {
 		IFile file = ((IFileEditorInput) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput()).getFile();
 		IProject project = file.getProject();
 
-		System.out.println("File Name is - " + file.getName());
-
 		// Detect the hyperlink only for 'masterConfig.xml'
 		if (AbstractHyperlink.FILE_MASTER_CONFIG.equals(file.getName())) {
 			IRegion lineRegion = null;
@@ -63,8 +61,8 @@ public class HyperlinkDetectorsConfig extends AbstractHyperlinkDetector {
 			// Show the hyperlink for the entire URL
 			String url = matcher.group();
 			String urlPath = matcher.group(1);
-			WSConsole.d("URL Path"+urlPath);
-			
+			WSConsole.d("URL Path" + urlPath);
+
 			int index = matchLine.indexOf(url);
 			IRegion targetRegion = new Region(lineRegion.getOffset() + index, url.length());
 			if (targetRegion != null) {

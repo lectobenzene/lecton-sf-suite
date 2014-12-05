@@ -70,7 +70,6 @@ public class ConfigHyperlink extends AbstractHyperlink {
 
 		// Check if the path is valid and a file exists at the path, if so open it.
 		IResource file = project.findMember(path);
-		System.out.println(file.getClass());
 		if (file != null && file.exists() && file instanceof IFile) {
 			try {
 				IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) file);
