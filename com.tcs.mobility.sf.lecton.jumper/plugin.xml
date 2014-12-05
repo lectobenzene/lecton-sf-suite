@@ -11,6 +11,14 @@
             name="SF_Service"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
+      <hyperlinkDetector
+            activate="true"
+            class="com.tcs.mobility.sf.lecton.jumper.detectors.HyperlinkDetectorsConfig"
+            description="Adds hyperlinks to the file paths in masterconfig.xml file"
+            id="com.tcs.mobility.sf.lecton.jumper.hyperlinkDetectorConfig"
+            name="SF_MasterConfig"
+            targetId="org.eclipse.ui.DefaultTextEditor">
+      </hyperlinkDetector>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

@@ -14,15 +14,30 @@ import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 
 public abstract class AbstractHyperlink implements IHyperlink {
 
+	// Location of mandatory folders
 	public static final String LOCATION_SPRING_FILES = "src/main/resources/META-INF/spring";
-	public static final String SERVICE_REF_XML = "service-ref=\"";
 	public static final String LOCATION_JAVA_FILES = "src/main/java";
+	public static final String LOCATION_RESOURCES_FILES = "src/main/resources";
+	public static final String LOCATION_DEPLOY_ALL= "src/main/resources/deploy/all/";
+
+	// Part of the location
+	public static final String LOCATION_PART_SSC = "ssc";
+	
+	public static final String SERVICE_REF_XML = "service-ref=\"";
 	public static final String SERVICE_REF_JAVA = "@Service(\"";
+
+	public static final String FILE_MASTER_CONFIG = "masterConfig.xml";
+	
 	/** Pattern to go from Java to XML */
 	public static final String SF_SERVICE = "@Service\\(\"([^\"]*)\"\\)";
+	
 	/** Pattern to go from XML to Java */
 	public static final String SF_REVERSE_SERVICE = "service-ref=\"([^\"]*)\"";
 
+	/** Pattern to detect url with 'config' as a protocol */
+	public static final String SF_CONFIG_URL = "config://([^\"]+)";
+
+	
 	/**
 	 * Opens the file in the editor
 	 * 
