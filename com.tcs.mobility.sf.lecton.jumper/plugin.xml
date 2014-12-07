@@ -19,6 +19,14 @@
             name="SF_MasterConfig"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
+      <hyperlinkDetector
+            activate="true"
+            class="com.tcs.mobility.sf.lecton.jumper.detectors.HyperlinkDetectorsClientContext"
+            description="Adds Hyperlink to the client-context file"
+            id="com.tcs.mobility.sf.lecton.jumper.hyperlinkDetectorClientContext"
+            name="SF_ClientContext"
+            targetId="org.eclipse.ui.DefaultTextEditor">
+      </hyperlinkDetector>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

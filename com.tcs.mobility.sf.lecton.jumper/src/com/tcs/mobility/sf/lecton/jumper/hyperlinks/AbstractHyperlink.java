@@ -33,8 +33,11 @@ public abstract class AbstractHyperlink implements IHyperlink {
 
 	/** Pattern to detect url with 'config' as a protocol */
 	public static final String SF_CONFIG_URL = "config://([^\"]+)";
-
 	
+	/** Pattern to detect connector-ref from client-context file */
+	public static final String SF_CONNECTOR_REF = "connector-ref=\"([^\"]*)\"";
+
+
 	/**
 	 * Opens the file in the editor
 	 * 
