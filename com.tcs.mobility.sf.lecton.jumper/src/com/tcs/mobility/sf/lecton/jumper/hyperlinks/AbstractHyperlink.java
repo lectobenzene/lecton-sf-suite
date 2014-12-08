@@ -22,6 +22,7 @@ public abstract class AbstractHyperlink implements IHyperlink {
 
 	public static final String SERVICE_REF_XML = "service-ref=\"";
 	public static final String SERVICE_REF_JAVA = "@Service(\"";
+	public static final String CONNECTOR_ID = "@Service(\"";
 
 	public static final String FILE_MASTER_CONFIG = "masterConfig.xml";
 	
