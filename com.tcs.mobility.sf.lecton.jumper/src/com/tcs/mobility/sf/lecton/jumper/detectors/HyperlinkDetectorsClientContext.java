@@ -18,17 +18,17 @@ import org.eclipse.ui.PlatformUI;
 
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.AbstractHyperlink;
 import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ClientContextHyperlink;
-import com.tcs.mobility.sf.lecton.jumper.hyperlinks.ConfigHyperlink;
 import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 
 public class HyperlinkDetectorsClientContext extends AbstractHyperlinkDetector {
 
 	private static final Pattern patternConnectorRef = Pattern.compile(AbstractHyperlink.SF_CONNECTOR_REF);
+	private static final Pattern patternJrfConfigBundle = Pattern.compile(AbstractHyperlink.JRF_CONFIG_BUNDLE);
 
-	public HyperlinkDetectorsClientContext() {
-		// TODO Auto-generated constructor stub
-	}
+	public static final int HYPERLINK_TYPE_CONNECTOR = 1;
+	public static final int HYPERLINK_TYPE_JRFCONFIG = 2;
 
+	
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		IDocument document = textViewer.getDocument();
@@ -48,27 +48,39 @@ public class HyperlinkDetectorsClientContext extends AbstractHyperlinkDetector {
 			WSConsole.e(e);
 		}
 
+		IHyperlink[] hyperlinks = null;
+
 		/*
 		 * Search for the 'connector-ref'
 		 */
 		Matcher matcher = patternConnectorRef.matcher(matchLine);
-		return createHyperlink(document, offset, project, lineRegion, matchLine, matcher, file.getFullPath());
+		hyperlinks = createHyperlink(document, offset, project, lineRegion, matchLine, matcher, file.getFullPath(), HYPERLINK_TYPE_CONNECTOR);
+
+		/*
+		 * Search for the 'jrfConfigBundle'
+		 */
+		if(hyperlinks == null){
+			matcher = patternJrfConfigBundle.matcher(matchLine);
+			hyperlinks = createHyperlink(document, offset, project, lineRegion, matchLine, matcher, file.getFullPath(), HYPERLINK_TYPE_JRFCONFIG);
+		}
+		
+		return hyperlinks;
 
 	}
 
 	private IHyperlink[] createHyperlink(IDocument document, int offset, IProject project, IRegion lineRegion, String matchLine, Matcher matcher,
-			IPath filePath) {
+			IPath filePath, int hyperlinkType) {
 		while (matcher.find()) {
 			System.out.println("FOUND");
 
-			String connectorId = matcher.group(1);
-			System.out.println(connectorId);
-			
-			int index = matchLine.indexOf(connectorId);
-			IRegion targetRegion = new Region(lineRegion.getOffset() + index, connectorId.length());
+			String tag = matcher.group(1);
+			System.out.println(tag);
+
+			int index = matchLine.indexOf(tag);
+			IRegion targetRegion = new Region(lineRegion.getOffset() + index, tag.length());
 			if (targetRegion != null) {
 				if ((targetRegion.getOffset() <= offset) && (targetRegion.getOffset() + targetRegion.getLength()) > offset) {
-					IHyperlink hyperlink = new ClientContextHyperlink(targetRegion, connectorId, filePath, project);
+					IHyperlink hyperlink = new ClientContextHyperlink(targetRegion, tag, filePath, project, hyperlinkType);
 					return new IHyperlink[] { hyperlink };
 				}
 			}

@@ -18,11 +18,13 @@ public abstract class AbstractHyperlink implements IHyperlink {
 	public static final String LOCATION_SPRING_FILES = "src/main/resources/META-INF/spring";
 	public static final String LOCATION_JAVA_FILES = "src/main/java";
 	public static final String LOCATION_RESOURCES_FILES = "src/main/resources";
-	public static final String LOCATION_DEPLOY_ALL= "src/main/resources/deploy/all/";
+	public static final String LOCATION_PART_DEPLOY_ALL= "deploy/all/";
 
 	public static final String SERVICE_REF_XML = "service-ref=\"";
 	public static final String SERVICE_REF_JAVA = "@Service(\"";
-	public static final String CONNECTOR_ID = "@Service(\"";
+	public static final String CONNECTOR_ID = "id=\"";
+
+	public static final String PROJECT_NAME_PART_CONFIG = "config";
 
 	public static final String FILE_MASTER_CONFIG = "masterConfig.xml";
 	
@@ -38,6 +40,8 @@ public abstract class AbstractHyperlink implements IHyperlink {
 	/** Pattern to detect connector-ref from client-context file */
 	public static final String SF_CONNECTOR_REF = "connector-ref=\"([^\"]*)\"";
 
+	/** Pattern to detect jrfConfigBundle from client-context file */
+	public static final String JRF_CONFIG_BUNDLE = "jrfConfigBundle=\"([^\"]*)\"";
 
 	/**
 	 * Opens the file in the editor
