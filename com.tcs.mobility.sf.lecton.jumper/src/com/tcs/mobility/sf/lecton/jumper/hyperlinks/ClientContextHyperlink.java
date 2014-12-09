@@ -7,13 +7,17 @@ import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.xml.sax.XMLReader;
 
 import com.tcs.mobility.sf.lecton.jumper.detectors.HyperlinkDetectorsClientContext;
 import com.tcs.mobility.sf.lecton.jumper.models.FileInformation;
@@ -76,15 +80,50 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			}			
 		}else if(hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG){
 			System.out.println(project.getLocation());
-			String projectPath = project.getLocation().toOSString();
-			String projectPathConfig = projectPath.substring(0, projectPath.lastIndexOf("-")+1) + AbstractHyperlink.PROJECT_NAME_PART_CONFIG;
-			System.out.println(projectPathConfig);
-			IPath path = new Path(projectPathConfig);
-			File file = path.toFile();
 			
+			String projectName = project.getName();
+			String projectNameConfig = projectName.substring(0, projectName.lastIndexOf("-")+1) + AbstractHyperlink.PROJECT_NAME_PART_CONFIG;
+			
+			
+			IWorkspace workspace= ResourcesPlugin.getWorkspace();    
+
+			IProject projectConfig = workspace.getRoot().getProject(projectNameConfig);
+			System.out.println(projectConfig.getLocation());
+			
+			IPath path = projectConfig.getFullPath().removeLastSegments(1);
 			path = path.append(AbstractHyperlink.LOCATION_RESOURCES_FILES).append(AbstractHyperlink.LOCATION_PART_DEPLOY_ALL);
+			
 			System.out.println(path);
-			System.out.println(file.exists());
+			
+			IFolder folder = projectConfig.getFolder(path);
+			
+			System.out.println(folder.getFullPath());
+			System.out.println(folder.exists());
+			
+			IFile masterConfigFile = null;
+			
+			try {
+				for (IResource iResource : folder.members()) {
+					if(iResource instanceof IFolder){
+						IResource findMember = ((IFolder) iResource).findMember((new Path(AbstractHyperlink.LOCATION_PART_SSC_CONFIG)).append( AbstractHyperlink.FILE_MASTER_CONFIG));
+						System.out.println("Found member");
+						if(findMember.exists()){
+							masterConfigFile = (IFile)findMember;
+							break;
+						}
+					}
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if(masterConfigFile != null){
+				System.out.println("MasterConfig File obtained");
+			
+				
+			}
+			
 		}
 		
 

@@ -19,6 +19,7 @@ public abstract class AbstractHyperlink implements IHyperlink {
 	public static final String LOCATION_JAVA_FILES = "src/main/java";
 	public static final String LOCATION_RESOURCES_FILES = "src/main/resources";
 	public static final String LOCATION_PART_DEPLOY_ALL= "deploy/all/";
+	public static final String LOCATION_PART_SSC_CONFIG= "ssc/config";
 
 	public static final String SERVICE_REF_XML = "service-ref=\"";
 	public static final String SERVICE_REF_JAVA = "@Service(\"";
