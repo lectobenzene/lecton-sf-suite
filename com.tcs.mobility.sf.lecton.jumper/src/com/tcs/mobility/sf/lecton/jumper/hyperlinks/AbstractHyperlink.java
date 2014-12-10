@@ -42,8 +42,18 @@ public abstract class AbstractHyperlink implements IHyperlink {
 	public static final String SF_CONNECTOR_REF = "connector-ref=\"([^\"]*)\"";
 
 	/** Pattern to detect jrfConfigBundle from client-context file */
-	public static final String JRF_CONFIG_BUNDLE = "jrfConfigBundle=\"([^\"]*)\"";
+	public static final String SF_JRF_CONFIG_BUNDLE = "jrfConfigBundle=\"([^\"]*)\"";
+	
+	/** Pattern to match 'section' tag in masterConfig file */
+	public static final String SF_MASTER_SECTION_OPEN = "<(?:\\s)*section(?:\\s)+path(?:\\s)*=\"([^\"]*)\"";
+	
+	public static final String SF_MASTER_SECTION_CLOSE = "</section>";
 
+	// <section path="sf">
+	
+	/** Pattern to match 'configElement' tag in masterConfig file */
+	
+	
 	/**
 	 * Opens the file in the editor
 	 * 
