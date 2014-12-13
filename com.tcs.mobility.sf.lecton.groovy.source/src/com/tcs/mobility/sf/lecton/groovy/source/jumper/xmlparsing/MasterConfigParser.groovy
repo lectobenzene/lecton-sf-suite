@@ -42,45 +42,49 @@ class MasterConfigParser {
         obj.check(file.getText(), "sf.security.permission")
     }
 
-    private check(String content, String key){
+    private check(String content, String key) {
         println key
+        String[] keys = key.split("\\.")
+
+        List<String> sectionKeys = keys.toList();
+        String configKey = sectionKeys.pop();
+
         Matcher sectionOpenMatcher = PATTERN_MASTER_SECTION_OPEN.matcher(content)
         Matcher sectionCloseMatcher = PATTERN_MASTER_SECTION_CLOSE.matcher(content)
 
         boolean found = false
+        int sectionEnd = 0;
 
         content.eachLine {
-            if (!found){
+            if (!found) {
                 //println "OO : $it"
-                if (sectionOpenMatcher.find()){
-                    println sectionOpenMatcher.group()
+                if (sectionOpenMatcher.find()) {
+                    String sectionPart = sectionOpenMatcher.group()
+
+                    if (sectionPart.equalsIgnoreCase(sectionKeys.get(0))) {
+
+                    } else {
+                        sectionEnd++;
+                    }
                 }
+
             }
         }
+
+
+        sectionKeys.each {
+            println it
+        }
+
+        println configKey
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private run(String content, String key) {
         println key
 
-        def reader  = new StringReader(content)
+        def reader = new StringReader(content)
         def doc = DOMBuilder.parse(reader)
         Element root = doc.documentElement
 
@@ -89,8 +93,8 @@ class MasterConfigParser {
 
         println rootNodeName
 
-        NodeList list =  root.getChildNodes()
-        for(Node node in list){
+        NodeList list = root.getChildNodes()
+        for (Node node in list) {
             println node.getNodeName()
             println nodeToString(node)
         }
