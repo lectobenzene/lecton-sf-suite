@@ -1,6 +1,5 @@
 package com.tcs.mobility.sf.lecton.jumper.hyperlinks;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -21,6 +20,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import com.tcs.mobility.sf.lecton.groovy.source.jumper.xmlparsing.MasterConfigParser;
 import com.tcs.mobility.sf.lecton.jumper.detectors.HyperlinkDetectorsClientContext;
 import com.tcs.mobility.sf.lecton.jumper.models.FileInformation;
 import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
@@ -81,8 +81,11 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			IResource file = project.findMember(path);
 			if (file != null && file.exists() && file instanceof IFile) {
 				System.out.println("File exists");
-				FileInformation info = getFileInformation((IFile) file);
-				openFileInEditor(info.getFile(), info.getOffset(), CONNECTOR_ID, tag);
+				FileInformation info = getFileInformation((IFile) file, HyperlinkDetectorsClientContext.HYPERLINK_TYPE_CONNECTOR);
+				if(info != null){
+					openFileInEditor(info.getFile(), info.getOffset(), CONNECTOR_ID, tag);
+				}
+					
 			}
 		} else if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG) {
 
@@ -91,13 +94,9 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			if (masterConfigFile != null) {
 
 				System.out.println("MasterConfig File obtained");
-				FileInformation fileInformation = getFileInformation(masterConfigFile);
-
-				try {
-					IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), masterConfigFile);
-				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				FileInformation fileInformation = getFileInformation(masterConfigFile, HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG);
+				if(fileInformation != null){
+					openFileInEditor(fileInformation.getFile(), fileInformation.getStartIndex(), fileInformation.getEndIndex());
 				}
 			}
 
@@ -126,7 +125,8 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 		try {
 			for (IResource iResource : folder.members()) {
 				if (iResource instanceof IFolder) {
-					IResource findMember = ((IFolder) iResource).findMember((new Path(AbstractHyperlink.LOCATION_PART_SSC_CONFIG)).append(AbstractHyperlink.FILE_MASTER_CONFIG));
+					IResource findMember = ((IFolder) iResource).findMember((new Path(AbstractHyperlink.LOCATION_PART_SSC_CONFIG))
+							.append(AbstractHyperlink.FILE_MASTER_CONFIG));
 					System.out.println("Found member");
 					if (findMember.exists()) {
 						masterConfigFile = (IFile) findMember;
@@ -147,9 +147,13 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 	 * 
 	 * @param file
 	 *            The file to open
+	 * @param hyperlinkType
 	 * @return file information if file is found, else null
 	 */
-	private FileInformation getFileInformation(IFile file) {
+	private FileInformation getFileInformation(IFile file, int hyperlinkType) {
+
+		FileInformation fileInfo = null;
+		
 		try {
 
 			ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
@@ -158,70 +162,33 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			IDocument document = textFileBuffer.getDocument();
 
 			String content = document.get();
-			
+
 			System.out.println("Inside file information");
-			Matcher sectionMatcher = PATTERN_MASTER_SECTION_OPEN.matcher(content);
 
-			getValue(content, sectionMatcher);
+			int indexa = content.indexOf("permission");
+			System.out.println("INDOE : "+indexa);
+			if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG) {
+				com.tcs.mobility.sf.lecton.groovy.source.jumper.models.FileInformation info = (new MasterConfigParser()).getOffsetInfo(content, tag);
+				if (info != null) {
+					fileInfo = new FileInformation(file, info.getStartOffset(), info.getEndOffset());
+				}
 
-			int index = content.indexOf(CONNECTOR_ID + tag + "\"");
+			} else if(hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_CONNECTOR) {
+				int index = content.indexOf(CONNECTOR_ID + tag + "\"");
+				if (index != -1) {
+					fileInfo = new FileInformation(file, index);
+				}
+			}
+
 
 			// Dispose the buffers
 			textFileBuffer = null;
 			bufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, null);
 
-			if (index != -1) {
-				return new FileInformation(file, index);
-			}
 		} catch (CoreException e) {
 			WSConsole.e(e);
 		}
-		return null;
-	}
-
-	private void getValue(String content, Matcher sectionMatcher) {
-		while (sectionMatcher.find()) {
-			System.out.println("Section Found");
-			System.out.println(sectionMatcher.group());
-			System.out.println(sectionMatcher.group(1));
-			String group = sectionMatcher.group();
-
-			int indexOf = content.indexOf(group);
-			String sectionContent = obtainSectionContent(indexOf, content);
-
-			System.out.println("SECTION CONTENT = \n" + sectionContent);
-
-		}
-	}
-
-	private String obtainSectionContent(int beginIndex, String content) {
-		int noOfSectionsFound = 0;
-		int endIndex = -1;
-		
-		Matcher matcherClose = PATTERN_MASTER_SECTION_CLOSE.matcher(content);
-		Matcher matcherOpen = PATTERN_MASTER_SECTION_OPEN.matcher(content);
-		
-		// if 'section' open tag is found, there has to be a corresponding close
-		// tag, hence increment the 'noOfSectionsFound' variable
-		while (matcherOpen.find()) {
-			System.out.println("Inner Section found");
-			System.out.println("MATCHER OPEN start= "+matcherOpen.start());
-			System.out.println("MATCHER OPEN end= "+matcherOpen.end());
-			noOfSectionsFound++;
-		}
-
-		// if 'section' close tag is found, get the end index 
-		while(matcherClose.find() && noOfSectionsFound > 0){
-			System.out.println("Sections Close tag found");
-			System.out.println("MATCHER CLOSE start= "+matcherClose.start());
-			System.out.println("MATCHER CLOSE end= "+matcherClose.end());
-			endIndex = content.indexOf(matcherClose.group()) + matcherClose.group().length();
-		}
-		System.out.println("Begin index = "+ beginIndex);
-		System.out.println("End index = "+ endIndex);
-
-		// find the string within startIndex and endIndex
-		return content.substring(beginIndex, endIndex);
+		return fileInfo;
 	}
 
 }

@@ -67,6 +67,18 @@ public abstract class AbstractHyperlink implements IHyperlink {
 		map.put(IMarker.CHAR_START, index + serviceRef.length());
 		map.put(IMarker.CHAR_END, index + serviceRef.length() + serviceName.length());
 
+		openFileInEditor(file, map);
+	}
+
+	protected void openFileInEditor(IResource file, int startIndex, int endIndex) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(IMarker.CHAR_START, startIndex);
+		map.put(IMarker.CHAR_END, endIndex);
+
+		openFileInEditor(file, map);
+	}
+	
+	protected void openFileInEditor(IResource file, HashMap<String, Object> map) {
 		IMarker marker = null;
 
 		try {
