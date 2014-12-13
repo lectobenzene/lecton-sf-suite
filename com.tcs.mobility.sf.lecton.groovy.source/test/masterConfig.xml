@@ -1,0 +1,52 @@
+<!-- Master Configuration File
+ It consists of two parts:
+ - a definition of all the axes and their possible values (ex: defaultLanguage, 
+   defaultAudience, etc);
+ - a list of resources containing the configuration properties (i.e. section, 
+   configElement).
+ -->
+<masterConfig
+        xmlns="http://bnppf.com/ssc/imb/sf/fwk/schema/config">
+    <defaultLanguage value="default"/>
+    <defaultTerritory value="any"/>
+    <defaultAudience value="any"/>
+    <defaultDistributionChannel value="any"/>
+
+    <section path="sf">
+        <configElement path="functionalLogger">
+            <xml url="config://config/sf/functionalLogger.xml"/>
+        </configElement>
+        <section path="security">
+            <configElement path="principal">
+                <xml url="config://config/sf/security/principal.xml"/>
+            </configElement>
+            <configElement path="permission">
+                <xml url="config://config/sf/security/permission.xml"/>
+            </configElement>
+            <configElement path="swaf">
+                <xml url="config://config/sf/security/swaf.xml"/>
+            </configElement>
+        </section>
+    </section>
+    
+     <section path="sil">
+		<configElement path="validateP2PpaymentConnector">
+			<property url="config://config/sil/validatePayment/jrf-connector.properties" />
+			<jndi url="config://config/sil/validatePayment/jrf-connector.jndi" />
+		</configElement>
+		<configElement path="getAccountConnector">
+			<property url="config://config/sil/getAccount/jrf-connector.properties" />
+			<jndi url="config://config/sil/getAccount/jrf-connector.jndi" />
+		</configElement>
+		<configElement path="getAccountListConnector">
+			<property url="config://config/sil/getAccountList/jrf-connector.properties" />
+			<jndi url="config://config/sil/getAccountList/jrf-connector.jndi" />
+		</configElement>
+		<configElement path="connector">
+			<property url="config://config/sil/jrf-connector.properties" />
+			<jndi url="config://config/sil/jrf-connector.jndi" />
+		</configElement>			
+	</section>
+	
+	
+</masterConfig>
