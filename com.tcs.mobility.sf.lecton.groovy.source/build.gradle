@@ -1,0 +1,26 @@
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+sourceSets {
+	main {
+		groovy {
+			srcDirs = ['src']
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:2.2.0'
+	compile fileTree(dir: 'lib', include: '*.jar')
+}
+
+tasks.withType(JavaCompile) {
+	sourceCompatibility = "1.6"
+	targetCompatibility = "1.6"
+}

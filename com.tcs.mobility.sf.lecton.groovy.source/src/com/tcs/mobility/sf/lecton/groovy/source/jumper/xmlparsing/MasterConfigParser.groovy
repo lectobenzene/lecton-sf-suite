@@ -1,117 +1,118 @@
 package com.tcs.mobility.sf.lecton.groovy.source.jumper.xmlparsing
 
-import groovy.xml.DOMBuilder
-import org.w3c.dom.Document
-import org.w3c.dom.Element
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
-
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerException
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+import org.w3c.dom.Document
+
+import com.tcs.mobility.sf.lecton.groovy.source.jumper.models.FileInformation
+
 class MasterConfigParser {
 
-    private Document doc
-    def rootNodeName
+	public static final String SF_MASTER_SECTION_OPEN = "<(?:\\s)*section(?:\\s)+path(?:\\s)*=\"([^\"]*)\""
+	public static final String SF_MASTER_CONFIG_ELEMENT = "<(?:\\s)*configElement(?:\\s)+path(?:\\s)*=\"([^\"]*)\""
+	public static final String SF_MASTER_SECTION_CLOSE = "</section>"
 
-    /** Pattern to match 'section' tag in masterConfig file */
-    public static final String SF_MASTER_SECTION_OPEN = "<(?:\\s)*section(?:\\s)+path(?:\\s)*=\"([^\"]*)\""
-
-    public static final String SF_MASTER_SECTION_CLOSE = "</section>"
-
-    private static final Pattern PATTERN_MASTER_SECTION_OPEN = Pattern.compile(SF_MASTER_SECTION_OPEN)
-    private static final Pattern PATTERN_MASTER_SECTION_CLOSE = Pattern.compile(SF_MASTER_SECTION_CLOSE)
+	private static final Pattern PATTERN_MASTER_SECTION_OPEN = Pattern.compile(SF_MASTER_SECTION_OPEN)
+	private static final Pattern PATTERN_MASTER_CONFIG_ELEMENT = Pattern.compile(SF_MASTER_CONFIG_ELEMENT)
+	private static final Pattern PATTERN_MASTER_SECTION_CLOSE = Pattern.compile(SF_MASTER_SECTION_CLOSE)
 
 
-    public MasterConfigParser() {
-        // TODO Auto-generated constructor stub
+	public static void main(String[] args) {
+		def obj = new MasterConfigParser()
+		File file = new File('test/masterConfig.xml')
 
-    }
+		FileInformation info = null
+								info = obj.getOffsetInfo(file.getText(), "sf.security.permission")
+		//						info = obj.getOffsetInfo(file.getText(), "sil.getAccountListConnector")
+		//						info = obj.getOffsetInfo(file.getText(), "sf.functionalLogger")
+		//				 		info = obj.getOffsetInfo(file.getText(), "sf.connector")
+		//						info = obj.getOffsetInfo(file.getText(), "security.permission")
+		println info.getStartOffset()
+		println info.getEndOffset()
+		println info.getLength()
+	}
 
-    public static void main(String[] args) {
-        def obj = new MasterConfigParser()
-        File file = new File('test/masterConfig.xml')
+	public FileInformation getOffsetInfo(String content, String key) {
+		
+		int indexa = content.indexOf("permission");
+		System.out.println("INDOE : "+indexa);
+		
+		String[] keys = key.split("\\.")
 
-        //obj.run(file.getText(), "sf.security.permission")
-        obj.check(file.getText(), "sf.security.permission")
-    }
+		List<String> sectionKeys = keys.toList()
+		String configKey = sectionKeys.pop()
 
-    private check(String content, String key) {
-        println key
-        String[] keys = key.split("\\.")
+		boolean found = false
+		int sectionEnd = 0
+		int index = 0
 
-        List<String> sectionKeys = keys.toList();
-        String configKey = sectionKeys.pop();
+		FileInformation info = new FileInformation()
+		int globalOffset = 0
+		
+		content.eachLine {
 
-        Matcher sectionOpenMatcher = PATTERN_MASTER_SECTION_OPEN.matcher(content)
-        Matcher sectionCloseMatcher = PATTERN_MASTER_SECTION_CLOSE.matcher(content)
+			Matcher sectionOpenMatcher = PATTERN_MASTER_SECTION_OPEN.matcher(it)
+			Matcher sectionCloseMatcher = PATTERN_MASTER_SECTION_CLOSE.matcher(it)
+			Matcher configElementMatcher = PATTERN_MASTER_CONFIG_ELEMENT.matcher(it)
 
-        boolean found = false
-        int sectionEnd = 0
-        int index = 0;
+			// If found, then don't process anything.
+			if (!found) {
 
-        content.eachLine {
-            if (!found) {
+				// Check if line is a section header, only if configElement tag is not yet reached
+				if (sectionOpenMatcher.find() && sectionKeys.size() != index) {
+					String sectionPart = sectionOpenMatcher.group(1)
 
-                if (sectionOpenMatcher.find()) {
-                    String sectionPart = sectionOpenMatcher.group()
+					/*
+					 *  If the parent section header does not match, none of the child
+					 *  section header should be considered. There is no use in processing them.
+					 */
+					if(sectionEnd == 0){
+						if (sectionPart.equalsIgnoreCase(sectionKeys.get(index))) {
+							// If found, then check the next section header
+							index++
+						}else{
+							// If not found, then increment the section end counter
+							sectionEnd++
+						}
+					}else{
+						/*
+						 *  Increment the section end counter for every child section header
+						 */
+						sectionEnd++
+					}
+				}
 
-                    if (sectionPart.equalsIgnoreCase(sectionKeys.get(index))) {
-                        index++
-                    } else {
-                        sectionEnd++
-                    }
-                }
+				// Decrement the counter for every section close tag found
+				if(sectionCloseMatcher.find()){
+					sectionEnd--
+				}
 
-            }
-        }
-
-
-        sectionKeys.each {
-            println it
-        }
-
-        println configKey
-
-    }
-
-
-    private run(String content, String key) {
-        println key
-
-        def reader = new StringReader(content)
-        def doc = DOMBuilder.parse(reader)
-        Element root = doc.documentElement
-
-        // Sets the root name, so that this is can be used while building the xml
-        rootNodeName = root.getNodeName()
-
-        println rootNodeName
-
-        NodeList list = root.getChildNodes()
-        for (Node node in list) {
-            println node.getNodeName()
-            println nodeToString(node)
-        }
-    }
-
-
-    private String nodeToString(Node node) {
-        StringWriter sw = new StringWriter()
-        try {
-            Transformer t = TransformerFactory.newInstance().newTransformer()
-            t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
-
-            t.transform(new DOMSource(node), new StreamResult(sw))
-        } catch (TransformerException te) {
-            System.out.println("nodeToString Transformer Exception")
-        }
-        return sw.toString()
-    }
+				/*
+				 *  If the index is pointing to the last one, then it means that no 
+				 *  more section tag needs to be found. Its time to find the 
+				 *  configElement tag. Check the configElement tag only 
+				 *  within the respective section tag, not everywhere.
+				 */
+				if(sectionKeys.size() == index && sectionEnd == 0){
+					if(configElementMatcher.find()){
+						String configElementPart = configElementMatcher.group(1)
+						if(configElementPart.equalsIgnoreCase(configKey)){
+							// If found, gather useful information.
+							found = true
+							info.startOffset = configElementMatcher.start(1) + globalOffset
+							info.endOffset = configElementMatcher.end(1) + globalOffset
+						}
+					}
+				}
+			}
+			
+			globalOffset += it.length() + 2 // 2 because of the 'return' character
+			println globalOffset
+		}
+		if(found){
+			return info
+		}
+		return null
+	}
 }
