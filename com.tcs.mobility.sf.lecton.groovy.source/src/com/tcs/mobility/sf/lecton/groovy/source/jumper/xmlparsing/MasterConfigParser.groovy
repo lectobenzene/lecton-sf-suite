@@ -53,18 +53,19 @@ class MasterConfigParser {
         Matcher sectionCloseMatcher = PATTERN_MASTER_SECTION_CLOSE.matcher(content)
 
         boolean found = false
-        int sectionEnd = 0;
+        int sectionEnd = 0
+        int index = 0;
 
         content.eachLine {
             if (!found) {
-                //println "OO : $it"
+
                 if (sectionOpenMatcher.find()) {
                     String sectionPart = sectionOpenMatcher.group()
 
-                    if (sectionPart.equalsIgnoreCase(sectionKeys.get(0))) {
-
+                    if (sectionPart.equalsIgnoreCase(sectionKeys.get(index))) {
+                        index++
                     } else {
-                        sectionEnd++;
+                        sectionEnd++
                     }
                 }
 
