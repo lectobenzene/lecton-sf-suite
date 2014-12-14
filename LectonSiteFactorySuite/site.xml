@@ -3,6 +3,7 @@
    <description name="LectonSiteFactorySuite">
       Contains all SiteFactory plugins
    </description>
-   <feature url="features/LectonSFUtility_1.0.0.201410010641.jar" id="LectonSFUtility" version="1.0.0.201410010641"/>
-   <feature url="features/LectonSFXml2Xsd2Java_1.0.0.201410010641.jar" id="LectonSFXml2Xsd2Java" version="1.0.0.201410010641"/>
+   <feature url="features/LectonSFJumper_1.0.0.201412141232.jar" id="LectonSFJumper" version="1.0.0.201412141232"/>
+   <feature url="features/LectonSFUtility_1.0.0.201412141232.jar" id="LectonSFUtility" version="1.0.0.201412141232"/>
+   <feature url="features/LectonSFXml2Xsd2Java_1.0.0.201412141232.jar" id="LectonSFXml2Xsd2Java" version="1.0.0.201412141232"/>
 </site>

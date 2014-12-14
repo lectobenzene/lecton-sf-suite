@@ -1,5 +1,6 @@
 package com.tcs.mobility.sf.lecton.jumper.hyperlinks;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -38,9 +39,6 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 	private final IProject project;
 
 	private final int hyperlinkType;
-
-	private static final Pattern PATTERN_MASTER_SECTION_OPEN = Pattern.compile(AbstractHyperlink.SF_MASTER_SECTION_OPEN);
-	private static final Pattern PATTERN_MASTER_SECTION_CLOSE = Pattern.compile(AbstractHyperlink.SF_MASTER_SECTION_CLOSE);
 
 	public ClientContextHyperlink(IRegion targetRegion, String tag, IPath filePath, IProject project, int hyperlinkType) {
 		this.targetRegion = targetRegion;
@@ -82,10 +80,10 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			if (file != null && file.exists() && file instanceof IFile) {
 				System.out.println("File exists");
 				FileInformation info = getFileInformation((IFile) file, HyperlinkDetectorsClientContext.HYPERLINK_TYPE_CONNECTOR);
-				if(info != null){
+				if (info != null) {
 					openFileInEditor(info.getFile(), info.getOffset(), CONNECTOR_ID, tag);
 				}
-					
+
 			}
 		} else if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG) {
 
@@ -95,13 +93,19 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 
 				System.out.println("MasterConfig File obtained");
 				FileInformation fileInformation = getFileInformation(masterConfigFile, HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG);
-				if(fileInformation != null){
+				if (fileInformation != null) {
 					openFileInEditor(fileInformation.getFile(), fileInformation.getStartIndex(), fileInformation.getEndIndex());
 				}
 			}
 
+		} else if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_INTERFACE) {
+			String filePath = tag.replace(".", File.separator).concat(".java");
+			IFile file = project.getFolder(AbstractHyperlink.LOCATION_JAVA_FILES).getFile(filePath);
+			if(file.exists()){
+				openFileInEditor(file);
+			}
+			
 		}
-
 	}
 
 	/**
@@ -153,7 +157,7 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 	private FileInformation getFileInformation(IFile file, int hyperlinkType) {
 
 		FileInformation fileInfo = null;
-		
+
 		try {
 
 			ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
@@ -166,20 +170,19 @@ public class ClientContextHyperlink extends AbstractHyperlink {
 			System.out.println("Inside file information");
 
 			int indexa = content.indexOf("permission");
-			System.out.println("INDOE : "+indexa);
+			System.out.println("INDOE : " + indexa);
 			if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_JRFCONFIG) {
 				com.tcs.mobility.sf.lecton.groovy.source.jumper.models.FileInformation info = (new MasterConfigParser()).getOffsetInfo(content, tag);
 				if (info != null) {
 					fileInfo = new FileInformation(file, info.getStartOffset(), info.getEndOffset());
 				}
 
-			} else if(hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_CONNECTOR) {
+			} else if (hyperlinkType == HyperlinkDetectorsClientContext.HYPERLINK_TYPE_CONNECTOR) {
 				int index = content.indexOf(CONNECTOR_ID + tag + "\"");
 				if (index != -1) {
 					fileInfo = new FileInformation(file, index);
 				}
 			}
-
 
 			// Dispose the buffers
 			textFileBuffer = null;

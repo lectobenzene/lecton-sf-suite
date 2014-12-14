@@ -24,9 +24,11 @@ public class HyperlinkDetectorsClientContext extends AbstractHyperlinkDetector {
 
 	private static final Pattern patternConnectorRef = Pattern.compile(AbstractHyperlink.SF_CONNECTOR_REF);
 	private static final Pattern patternJrfConfigBundle = Pattern.compile(AbstractHyperlink.SF_JRF_CONFIG_BUNDLE);
+	private static final Pattern patternInterface = Pattern.compile(AbstractHyperlink.SF_INTERFACE);
 
 	public static final int HYPERLINK_TYPE_CONNECTOR = 1;
 	public static final int HYPERLINK_TYPE_JRFCONFIG = 2;
+	public static final int HYPERLINK_TYPE_INTERFACE = 3;
 
 	
 	@Override
@@ -64,6 +66,10 @@ public class HyperlinkDetectorsClientContext extends AbstractHyperlinkDetector {
 			hyperlinks = createHyperlink(document, offset, project, lineRegion, matchLine, matcher, file.getFullPath(), HYPERLINK_TYPE_JRFCONFIG);
 		}
 		
+		if(hyperlinks == null){
+			matcher = patternInterface.matcher(matchLine);
+			hyperlinks = createHyperlink(document, offset, project, lineRegion, matchLine, matcher, file.getFullPath(), HYPERLINK_TYPE_INTERFACE);
+		}
 		return hyperlinks;
 
 	}

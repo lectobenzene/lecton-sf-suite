@@ -2,6 +2,7 @@ package com.tcs.mobility.sf.lecton.jumper.hyperlinks;
 
 import java.util.HashMap;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -43,6 +44,8 @@ public abstract class AbstractHyperlink implements IHyperlink {
 
 	/** Pattern to detect jrfConfigBundle from client-context file */
 	public static final String SF_JRF_CONFIG_BUNDLE = "jrfConfigBundle=\"([^\"]*)\"";
+
+	public static final String SF_INTERFACE = "interface=\"([^\"]*)\"";
 	
 	/** Pattern to match 'section' tag in masterConfig file */
 	public static final String SF_MASTER_SECTION_OPEN = "<(?:\\s)*section(?:\\s)+path(?:\\s)*=\"([^\"]*)\"";
@@ -78,6 +81,14 @@ public abstract class AbstractHyperlink implements IHyperlink {
 		openFileInEditor(file, map);
 	}
 	
+	protected void openFileInEditor(IResource file){
+		try {
+			IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile)file);
+		} catch (PartInitException e) {
+			WSConsole.e(e);
+		}
+	}
+	
 	protected void openFileInEditor(IResource file, HashMap<String, Object> map) {
 		IMarker marker = null;
 
@@ -100,4 +111,6 @@ public abstract class AbstractHyperlink implements IHyperlink {
 			}
 		}
 	}
+	
+	
 }
