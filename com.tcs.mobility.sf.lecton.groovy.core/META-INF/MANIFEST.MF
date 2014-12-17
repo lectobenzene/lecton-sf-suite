@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GroovyCore
+Bundle-SymbolicName: com.tcs.mobility.sf.lecton.groovy.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: com.tcs.mobility.sf.lecton.groovy.source.jar,
+ lib/groovy-all-2.2.2.jar
+Export-Package: com.tcs.mobility.sf.lecton.groovy.source.jumper.models,
+ com.tcs.mobility.sf.lecton.groovy.source.jumper.xmlparsing
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: TCS
