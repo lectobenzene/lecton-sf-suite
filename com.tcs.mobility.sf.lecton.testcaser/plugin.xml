@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.tcs.mobility.sf.lecton.general.project.sitefactorycommands"
+            name="SiteFactory Tools">
+      </category>
+      <command
+            categoryId="com.tcs.mobility.sf.lecton.general.project.sitefactorycommands"
+            id="com.tcs.mobility.sf.lecton.testcaser.mockclasses"
+            name="Mock Classes ...">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.tcs.mobility.sf.lecton.testcaser.propertytesters.MockClassesPropertyTester"
+            id="com.tcs.mobility.sf.lecton.testcaser.mockclassespropertytester"
+            namespace="mockclasses.propertytester"
+            properties="filetype"
+            type="org.eclipse.jdt.core.IJavaElement">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:com.tcs.mobility.sf.lecton.menu.sitefactorytools?after=additions">
+         <menu
+               label="Test Case">
+            <command
+                  commandId="com.tcs.mobility.sf.lecton.testcaser.mockclasses"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="or">
+                        <test
+                              forcePluginActivation="true"
+                              property="mockclasses.propertytester.filetype"
+                              value="java">
+                        </test>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>

@@ -15,5 +15,16 @@
             class="com.tcs.mobility.sf.lecton.utility.preferences.SiteFactoryPreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+         <menu
+               id="com.tcs.mobility.sf.lecton.menu.sitefactorytools"
+               label="SiteFactory Tools">
+         </menu>
+      </menuContribution>
+   </extension>
 
 </plugin>

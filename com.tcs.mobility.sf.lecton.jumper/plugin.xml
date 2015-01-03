@@ -32,9 +32,9 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+            locationURI="popup:com.tcs.mobility.sf.lecton.menu.sitefactorytools?after=additions">
          <menu
-               label="SiteFactory Tools">
+               label="Analyse">
             <command
                   commandId="com.tcs.mobility.sf.lecton.jumper.analyzespringbinding"
                   style="push">
