@@ -13,7 +13,6 @@ public class MockClassesPropertyTester extends PropertyTester {
 	
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		System.out.println("Property Testing");
 		if (PROPERTY_FILE_TYPE.equals(property)) {
 			if(receiver instanceof ICompilationUnit){
 				// Make it visible only if the expected extension is satisfied. The
