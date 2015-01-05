@@ -14,8 +14,16 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IPackageBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.viewers.ISelection;
@@ -48,6 +56,7 @@ public class MockClasses extends AbstractHandler {
 
 				ASTParser parser = ASTParser.newParser(AST_LEVEL);
 				parser.setSource(javaClass);
+				parser.setResolveBindings(true);
 				CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
 
 				AST ast = astRoot.getAST();
@@ -55,20 +64,59 @@ public class MockClasses extends AbstractHandler {
 
 				// Get packageName
 				Name packageName = astRoot.getPackage().getName();
-				System.out.println("Package Name : "+packageName.getFullyQualifiedName());
+				System.out.println("Package Name : " + packageName.getFullyQualifiedName());
 
 				// Get list of imports
 				for (Object importObj : astRoot.imports()) {
-					if(importObj instanceof ImportDeclaration){
+					if (importObj instanceof ImportDeclaration) {
 						Name importName = ((ImportDeclaration) importObj).getName();
-						System.out.println("Import Name : "+importName.getFullyQualifiedName());
+						System.out.println("Import Name : " + importName.getFullyQualifiedName());
 					}
 				}
-				
+
 				// Get the type Name
 				Object type = astRoot.types().get(0);
-				
-				
+				if (type instanceof TypeDeclaration) {
+					TypeDeclaration javaType = ((TypeDeclaration) type);
+
+					// Get Class name
+					SimpleName className = javaType.getName();
+					System.out.println("Class Name : " + className.getFullyQualifiedName());
+					System.out.println("Class Name : " + className.getIdentifier());
+
+					// Get the field info
+					for (FieldDeclaration fieldDeclaration : javaType.getFields()) {
+
+						// Get the name of the fields
+						for (Object object : fieldDeclaration.fragments()) {
+							if (object instanceof VariableDeclarationFragment) {
+								VariableDeclarationFragment fragment = (VariableDeclarationFragment) object;
+
+								// Get field name
+								SimpleName fieldName = fragment.getName();
+								System.out.println("Field Name : " + fieldName.getIdentifier());
+
+							}
+						}
+
+						// Get the type and package of the fields
+						Type fieldType = fieldDeclaration.getType();
+						ITypeBinding typeBinding = fieldType.resolveBinding();
+						if (typeBinding != null) {
+							String typeName = typeBinding.getName();
+							System.out.println("Type Name : " + typeName);
+
+							if (fieldType.isSimpleType()) {
+								IPackageBinding packageBinding = typeBinding.getPackage();
+								if (packageBinding != null) {
+									System.out.println("Type Package : " + packageBinding.getName());
+								}
+							}
+
+						}
+
+					}
+				}
 
 			} catch (JavaModelException e) {
 				WSConsole.e(e);
