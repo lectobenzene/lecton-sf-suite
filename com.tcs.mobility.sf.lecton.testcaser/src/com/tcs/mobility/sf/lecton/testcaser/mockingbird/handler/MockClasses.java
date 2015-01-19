@@ -111,9 +111,7 @@ public class MockClasses extends AbstractHandler {
 									System.out.println("Type Package : " + packageBinding.getName());
 								}
 							}
-
 						}
-
 					}
 				}
 
