@@ -138,7 +138,6 @@ public class MockClasses extends AbstractHandler {
 					// Get Class name
 					SimpleName className = javaType.getName();
 					System.out.println("Class Name : " + className.getFullyQualifiedName());
-					System.out.println("Class Name : " + className.getIdentifier());
 
 					// Get the field info
 					for (FieldDeclaration fieldDeclaration : javaType.getFields()) {
