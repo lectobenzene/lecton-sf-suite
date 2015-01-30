@@ -7,6 +7,8 @@ import java.util.List;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -32,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 import com.tcs.mobility.sf.lecton.testcaser.mockingbird.ui.DialogPackageSelection;
 import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
@@ -42,27 +45,60 @@ public class MockClasses extends AbstractHandler {
 
 	private List<ICompilationUnit> javaClassesToMockList;
 
-	private String pkgDestination;
+	private ICompilationUnit cmpUnitSource;
+	
+	private IPath pkgSource;
+	private IPath pkgDestination;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		System.out.println("Mock Classes selected");
-
-		// Show dialog to map the package where to create the Mock Java file
-
+		
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		DialogPackageSelection selectionDialog = new DialogPackageSelection(window.getShell());
-		selectionDialog.open();
-
-		if (selectionDialog.getReturnCode() == Dialog.OK) {
-			System.out.println("Dialog Shown");
-
-			// Get destination package from the dialog
-			pkgDestination = selectionDialog.getPkgDestination();
-		} else {
-			return null;
+		
+		// Get the file that is selected [the source java file]. This can be used for the selection suggestion
+		ISelectionService selectionService = window.getSelectionService();
+		IStructuredSelection selection = (IStructuredSelection)selectionService.getSelection("org.eclipse.jdt.ui.PackageExplorer");
+		Object firstElement = selection.getFirstElement();
+		if(firstElement instanceof ICompilationUnit){
+			cmpUnitSource = ((ICompilationUnit) firstElement);
 		}
+		
+		
+		
+		// Show dialog to map the package where to create the Mock Java file
+//		DialogPackageSelection selectionDialog = new DialogPackageSelection(window.getShell(), pkgSource);
+//		selectionDialog.open();
+//
+//		if (selectionDialog.getReturnCode() == Dialog.OK) {
+//			System.out.println("Dialog Shown");
+//
+//			// Get destination package from the dialog
+//			pkgDestination = selectionDialog.getPkgDestination();
+//		} else {
+//			return null;
+//		}
 
+		
+		// Selection Dialog to pick the package where the mock java has to be created
+		ContainerSelectionDialog containerDialog = new ContainerSelectionDialog(window.getShell(), null, false, "Select Package where Mock java has to be created:");
+		containerDialog.open();
+
+		if (containerDialog.getReturnCode() == Dialog.OK) {
+			System.out.println("Browsing Done");
+			
+			Object[] result = containerDialog.getResult();
+			System.out.println(result);
+			if(result != null && result.length > 0 && result[0] instanceof Path){
+				pkgDestination = (Path)result[0];
+			}
+		}
+		
+		
+		
+		System.out.println("PKG to create the Java classes : "+pkgDestination.toOSString());
+		
+		
 		javaClassesToMockList = getJavaClassesToMockFromSelection();
 		if (javaClassesToMockList == null) {
 			return null;

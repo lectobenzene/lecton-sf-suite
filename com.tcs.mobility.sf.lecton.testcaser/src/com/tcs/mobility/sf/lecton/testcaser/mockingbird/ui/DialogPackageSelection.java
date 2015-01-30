@@ -1,11 +1,8 @@
 package com.tcs.mobility.sf.lecton.testcaser.mockingbird.ui;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -23,12 +20,16 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import com.tcs.mobility.sf.lecton.utility.utils.UtilResource;
 
 public class DialogPackageSelection extends Dialog {
-	
+
 	private Text txtPkgdestination;
-	private String pkgDestination;
+	private String pkgDestinationOSString;
 	
-	public DialogPackageSelection(Shell parent) {
+	private IPath pkgSource;
+	private IPath pkgDestination;
+
+	public DialogPackageSelection(Shell parent, IPath pkgSource) {
 		super(parent);
+		this.pkgSource = pkgSource;
 		setShellStyle(SWT.BORDER | SWT.RESIZE | SWT.TITLE);
 	}
 
@@ -54,25 +55,29 @@ public class DialogPackageSelection extends Dialog {
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ContainerSelectionDialog containerDialog = new ContainerSelectionDialog(getShell(), (IContainer) UtilResource.getResource("/BE_FORTIS_DBIA-ap01-war/src/main/java/com/bnppf/adm/easybanking/dbia/al/common"), false, "Select Package");
-
+				
 				// Selection Suggestion
 				// Keep a switch for this and add this to the preference
-				UtilResource.getResource("/BE_FORTIS_DBIA-ap01-war/src/main/java/com/bnppf/adm/easybanking/dbia/al/common");
-				Path[] paths = new Path[] {(Path) Path.fromOSString("/BE_FORTIS_DBIA-ap01-war/src/main/java/com/bnppf/adm/easybanking/dbia/al/common")}; 
-				containerDialog.setInitialSelections(paths);
-				containerDialog.create();
-				containerDialog.setInitialSelections(paths);
+				// use the pkgSource to obtain the selection suggestion
+								
+//				ContainerSelectionDialog containerDialog = new ContainerSelectionDialog(getShell(), (IContainer) UtilResource
+//						.getResource("/BE_FORTIS_DBIA-ap01-war/src/main/java/com/bnppf/adm/easybanking/dbia/al/common"), false, "Select Package");
+
+				ContainerSelectionDialog containerDialog = new ContainerSelectionDialog(getShell(), null, false, "Select Package");
 				containerDialog.open();
 
-				if(containerDialog.getReturnCode() == Dialog.OK){
+				if (containerDialog.getReturnCode() == Dialog.OK) {
 					System.out.println("Browsing Done");
+					
 					Object[] result = containerDialog.getResult();
 					System.out.println(result);
-					
-					
+					if(result != null && result.length > 0 && result[0] instanceof Path){
+						pkgDestination = (Path)result[0];
+						txtPkgdestination.setText(pkgDestination.toOSString());
+					}
+
 				}
-				
+
 			}
 		});
 		btnBrowse.setText("Browse...");
@@ -80,14 +85,7 @@ public class DialogPackageSelection extends Dialog {
 		return container;
 	}
 
-	
-	@Override
-	protected void okPressed() {
-		pkgDestination = txtPkgdestination.getText();
-		super.okPressed();
-	}
-
-	public String getPkgDestination() {
+	public IPath getPkgDestination() {
 		return pkgDestination;
 	}
 
