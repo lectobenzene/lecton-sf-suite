@@ -24,12 +24,16 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.tcs.mobility.sf.lecton.testcaser.mockingbird.ui.DialogPackageSelection;
 import com.tcs.mobility.sf.lecton.utility.logging.WSConsole;
 
 public class MockClasses extends AbstractHandler {
@@ -38,9 +42,26 @@ public class MockClasses extends AbstractHandler {
 
 	private List<ICompilationUnit> javaClassesToMockList;
 
+	private String pkgDestination;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		System.out.println("Mock Classes selected");
+
+		// Show dialog to map the package where to create the Mock Java file
+
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		DialogPackageSelection selectionDialog = new DialogPackageSelection(window.getShell());
+		selectionDialog.open();
+
+		if (selectionDialog.getReturnCode() == Dialog.OK) {
+			System.out.println("Dialog Shown");
+
+			// Get destination package from the dialog
+			pkgDestination = selectionDialog.getPkgDestination();
+		} else {
+			return null;
+		}
 
 		javaClassesToMockList = getJavaClassesToMockFromSelection();
 		if (javaClassesToMockList == null) {
