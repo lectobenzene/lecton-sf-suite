@@ -3,8 +3,12 @@ package com.tcs.mobility.sf.lecton.testcaser.mockingbird.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
@@ -25,6 +29,14 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchDocument;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchMatch;
+import org.eclipse.jdt.core.search.SearchParticipant;
+import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.core.search.SearchRequestor;
 
 import com.tcs.mobility.sf.lecton.testcaser.mockingbird.datatypes.PrimaryDataType;
 import com.tcs.mobility.sf.lecton.testcaser.mockingbird.models.FieldDeclarationInfo;
@@ -34,6 +46,17 @@ public class ASTProcessor extends ParentProcessor {
 
 	public static final int AST_LEVEL = AST.JLS3;
 
+	/**
+	 * Creates the CompilationUnit based on the model java file
+	 * 
+	 * @param ast
+	 *            the AST
+	 * @param jFolder
+	 *            the folder where the modal java file exists
+	 * @param classInformation
+	 *            information about the modal class
+	 * @return the unit created
+	 */
 	public static CompilationUnit createCompilationUnit(AST ast, IJavaElement jFolder, JavaInfo classInformation) {
 		CompilationUnit unit = ast.newCompilationUnit();
 
@@ -48,6 +71,7 @@ public class ASTProcessor extends ParentProcessor {
 			importDeclaration.setName(ast.newName(imports));
 			unit.imports().add(importDeclaration);
 		}
+
 		// Add the source file also to the list of imports
 		ImportDeclaration importDeclaration = ast.newImportDeclaration();
 		importDeclaration.setName(ast.newName(classInformation.getTypeNameFullyQualified()));
@@ -77,19 +101,17 @@ public class ASTProcessor extends ParentProcessor {
 		ClassInstanceCreation classInstanceCreation = ast.newClassInstanceCreation();
 		classInstanceCreation.setType(ast.newSimpleType(ast.newSimpleName(classInformation.getTypeName())));
 		fragment.setInitializer(classInstanceCreation);
-
 		VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(fragment);
 		variableDeclarationStatement.setType(ast.newSimpleType(ast.newSimpleName(classInformation.getTypeName())));
 		block.statements().add(variableDeclarationStatement);
 
+		// Process each fields and add the new statements created to the block
 		for (FieldDeclarationInfo fieldDeclarationInfo : classInformation.getFieldDeclarations()) {
 			PrimaryDataType dataType = getDataTypeFactory(fieldDeclarationInfo.getTypeName());
-
 			for (String fieldName : fieldDeclarationInfo.getFieldNames()) {
 				ExpressionStatement expressionStatement = dataType.getExpressionStatement(ast, classInformation.getTypeLowerName(), fieldName);
 				block.statements().add(expressionStatement);
 			}
-
 		}
 
 		// Return the variable
@@ -104,10 +126,128 @@ public class ASTProcessor extends ParentProcessor {
 		return unit;
 	}
 
+	
+	/**
+	 * Creates the CompilationUnit based on the model java file
+	 * 
+	 * @param ast
+	 *            the AST
+	 * @param jFolder
+	 *            the folder where the modal java file exists
+	 * @param classInformation
+	 *            information about the modal class
+	 * @return the unit created
+	 */
+	public static CompilationUnit createCompilationUnit(AST ast, IJavaElement jFolder, ICompilationUnit javaUnit) {
+		CompilationUnit unit = ast.newCompilationUnit();
+
+		JavaInfo classInformation = getClassInformation(javaUnit);
+		
+		// Write the package name
+		PackageDeclaration packageDeclaration = createPackageDeclaration(ast, jFolder.getElementName());
+		unit.setPackage(packageDeclaration);
+
+		// Write the list of imports
+		for (String imports : classInformation.getImportList()) {
+			ImportDeclaration importDeclaration = ast.newImportDeclaration();
+			System.out.println(imports);
+			importDeclaration.setName(ast.newName(imports));
+			unit.imports().add(importDeclaration);
+		}
+
+		// Add the source file also to the list of imports
+		ImportDeclaration importDeclaration = ast.newImportDeclaration();
+		importDeclaration.setName(ast.newName(classInformation.getTypeNameFullyQualified()));
+		unit.imports().add(importDeclaration);
+
+		// Create the TYPE name
+		TypeDeclaration type = ast.newTypeDeclaration();
+		type.setInterface(false);
+		type.modifiers().add(ast.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
+		type.setName(ast.newSimpleName(classInformation.getTypeName() + "Mother"));
+
+		// Create the Mock method
+		MethodDeclaration methodDeclaration = ast.newMethodDeclaration();
+		methodDeclaration.setConstructor(false);
+		List modifiers = methodDeclaration.modifiers();
+		modifiers.add(ast.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
+		modifiers.add(ast.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
+		methodDeclaration.setName(ast.newSimpleName(classInformation.getTypeLowerName() + "Mock"));
+		methodDeclaration.setReturnType2(ast.newSimpleType(ast.newName(classInformation.getTypeName())));
+
+		org.eclipse.jdt.core.dom.Block block = ast.newBlock();
+
+		// Create the variable and initialize it
+		VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
+		SimpleName variableName = ast.newSimpleName(classInformation.getTypeLowerName());
+		fragment.setName(variableName);
+		ClassInstanceCreation classInstanceCreation = ast.newClassInstanceCreation();
+		classInstanceCreation.setType(ast.newSimpleType(ast.newSimpleName(classInformation.getTypeName())));
+		fragment.setInitializer(classInstanceCreation);
+		VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(fragment);
+		variableDeclarationStatement.setType(ast.newSimpleType(ast.newSimpleName(classInformation.getTypeName())));
+		block.statements().add(variableDeclarationStatement);
+
+		// Process each fields and add the new statements created to the block
+		for (FieldDeclarationInfo fieldDeclarationInfo : classInformation.getFieldDeclarations()) {
+			PrimaryDataType dataType = getDataTypeFactory(fieldDeclarationInfo.getTypeName());
+			if(fieldDeclarationInfo.isSimpleType()){
+				// Recursion
+
+				System.out.println("SIMPLE TYPE");
+				String stringPattern = fieldDeclarationInfo.getTypePackage()+"."+fieldDeclarationInfo.getTypeName();
+				System.out.println("SearchPattern = "+stringPattern);
+				// Search for the Unit
+				SearchPattern searchPattern = SearchPattern.createPattern(stringPattern, IJavaSearchConstants.TYPE, IJavaSearchConstants.TYPE, SearchPattern.R_EXACT_MATCH);
+				IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
+				
+				SearchRequestor requestor = new SearchRequestor() {
+					
+					@Override
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						// TODO Auto-generated method stub
+						System.out.println("MATCH found");
+						Object element = match.getElement();
+						System.out.println(match.getResource().getFullPath());
+					}
+				};
+				SearchEngine searchEngine = new SearchEngine();
+				
+				try {
+					searchEngine.search(searchPattern, new SearchParticipant[]{SearchEngine.getDefaultSearchParticipant()}, scope, requestor, null);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			for (String fieldName : fieldDeclarationInfo.getFieldNames()) {
+				ExpressionStatement expressionStatement = dataType.getExpressionStatement(ast, classInformation.getTypeLowerName(), fieldName);
+				block.statements().add(expressionStatement);
+			}
+		}
+
+		// Return the variable
+		ReturnStatement returnStatement = ast.newReturnStatement();
+		returnStatement.setExpression(ast.newSimpleName(variableName.getFullyQualifiedName()));
+		block.statements().add(returnStatement);
+
+		methodDeclaration.setBody(block);
+		type.bodyDeclarations().add(methodDeclaration);
+		unit.types().add(type);
+
+		return unit;
+	}
+
+	
+	/**
+	 * Extracts all needed info about the java file and returns the object
+	 * 
+	 * @param cmpUnit
+	 *            the java ICompilationUnit
+	 * @return class information object
+	 */
 	public static JavaInfo getClassInformation(ICompilationUnit cmpUnit) {
-
-		System.out.println(cmpUnit.getElementName());
-
 		ASTParser parser = ASTParser.newParser(AST_LEVEL);
 		parser.setSource(cmpUnit);
 		parser.setResolveBindings(true);
@@ -133,7 +273,7 @@ public class ASTProcessor extends ParentProcessor {
 		// Get the field info
 		for (FieldDeclaration fieldDeclaration : javaType.getFields()) {
 			FieldDeclarationInfo fieldDeclarationInfo = getFieldDeclarationInfo(fieldDeclaration);
-			if(fieldDeclarationInfo != null){
+			if (fieldDeclarationInfo != null) {
 				fieldDeclarations.add(fieldDeclarationInfo);
 			}
 		}
@@ -148,6 +288,12 @@ public class ASTProcessor extends ParentProcessor {
 		return javaInfo;
 	}
 
+	/**
+	 * Create the package declaration based on the package name
+	 * @param ast
+	 * @param packageName
+	 * @return package declaration
+	 */
 	private static PackageDeclaration createPackageDeclaration(AST ast, String packageName) {
 		PackageDeclaration packageDeclaration = ast.newPackageDeclaration();
 		packageDeclaration.setName(ast.newName(packageName));
@@ -155,8 +301,9 @@ public class ASTProcessor extends ParentProcessor {
 	}
 
 	/**
+	 * Get the Field Declaration info
 	 * @param fieldDeclaration
-	 * @return
+	 * @return the field declaration object
 	 */
 	private static FieldDeclarationInfo getFieldDeclarationInfo(FieldDeclaration fieldDeclaration) {
 		FieldDeclarationInfo fieldDeclartionInfo = new FieldDeclarationInfo();
@@ -165,6 +312,7 @@ public class ASTProcessor extends ParentProcessor {
 		VariableDeclarationFragment fragment;
 		List<String> fields = new ArrayList<String>();
 
+		// Don't add FINAL type field
 		for (Object object : fieldDeclaration.modifiers()) {
 			if (object instanceof Modifier && ((Modifier) object).isFinal()) {
 				return null;
@@ -176,7 +324,6 @@ public class ASTProcessor extends ParentProcessor {
 
 			// Get field name
 			SimpleName fieldName = fragment.getName();
-			System.out.println("Field Name : " + fieldName.getIdentifier());
 			fields.add(fieldName.getIdentifier());
 		}
 
@@ -185,7 +332,6 @@ public class ASTProcessor extends ParentProcessor {
 		ITypeBinding typeBinding = fieldType.resolveBinding();
 		if (typeBinding != null) {
 			String typeName1 = typeBinding.getName();
-			System.out.println("Type Name : " + typeName1);
 			fieldDeclartionInfo.setTypeName(typeName1);
 
 			if (fieldType.isSimpleType()) {
@@ -193,7 +339,6 @@ public class ASTProcessor extends ParentProcessor {
 
 				IPackageBinding packageBinding = typeBinding.getPackage();
 				if (packageBinding != null) {
-					System.out.println("Type Package : " + packageBinding.getName());
 					fieldDeclartionInfo.setTypePackage(packageBinding.getName());
 				}
 			} else {
@@ -204,12 +349,22 @@ public class ASTProcessor extends ParentProcessor {
 		return fieldDeclartionInfo;
 	}
 
+	/**
+	 * Get the type name with the package details
+	 * @param astRoot
+	 * @return
+	 */
 	private static String getTypeNameFullyQualified(CompilationUnit astRoot) {
 		return getPackageName(astRoot) + "." + getTypeName(getTypeDeclaration(astRoot));
 	}
 
-	private static TypeDeclaration getTypeDeclaration(CompilationUnit astRoot) {
-		Object type = astRoot.types().get(0);
+	/**
+	 * Returns the type declaration from the CompilationUnit
+	 * @param unit
+	 * @return
+	 */
+	public static TypeDeclaration getTypeDeclaration(CompilationUnit unit) {
+		Object type = unit.types().get(0);
 		if (type instanceof TypeDeclaration) {
 			return ((TypeDeclaration) type);
 		}
@@ -224,7 +379,6 @@ public class ASTProcessor extends ParentProcessor {
 	 */
 	private static String getTypeName(TypeDeclaration javaType) {
 		SimpleName className = javaType.getName();
-		System.out.println("Class Name : " + className.getFullyQualifiedName());
 		return className.getFullyQualifiedName();
 	}
 
@@ -239,7 +393,6 @@ public class ASTProcessor extends ParentProcessor {
 		for (Object importObj : astRoot.imports()) {
 			if (importObj instanceof ImportDeclaration) {
 				Name importName = ((ImportDeclaration) importObj).getName();
-				System.out.println("Import Name : " + importName.getFullyQualifiedName());
 				imports.add(importName.getFullyQualifiedName());
 			}
 		}

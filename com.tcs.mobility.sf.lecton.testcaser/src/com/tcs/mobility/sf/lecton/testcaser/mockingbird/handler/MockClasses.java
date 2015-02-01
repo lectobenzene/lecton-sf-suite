@@ -9,7 +9,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -19,31 +18,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.IPackageBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -70,7 +45,6 @@ public class MockClasses extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println("Mock Classes selected");
 
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
@@ -83,19 +57,6 @@ public class MockClasses extends AbstractHandler {
 			cmpUnitSource = ((ICompilationUnit) firstElement);
 		}
 
-		// Show dialog to map the package where to create the Mock Java file
-		// DialogPackageSelection selectionDialog = new
-		// DialogPackageSelection(window.getShell(), pkgSource);
-		// selectionDialog.open();
-		//
-		// if (selectionDialog.getReturnCode() == Dialog.OK) {
-		// System.out.println("Dialog Shown");
-		//
-		// // Get destination package from the dialog
-		// pkgDestination = selectionDialog.getPkgDestination();
-		// } else {
-		// return null;
-		// }
 
 		// Selection Dialog to pick the package where the mock java has to be
 		// created
@@ -104,49 +65,50 @@ public class MockClasses extends AbstractHandler {
 		containerDialog.open();
 
 		if (containerDialog.getReturnCode() == Dialog.OK) {
-			System.out.println("Browsing Done");
-
 			Object[] result = containerDialog.getResult();
-			System.out.println(result);
 			if (result != null && result.length > 0 && result[0] instanceof Path) {
 				pkgDestination = (Path) result[0];
 			}
 		}
-
-		System.out.println("PKG to create the Java classes : " + pkgDestination.toOSString());
 
 		javaClassesToMockList = getJavaClassesToMockFromSelection();
 		if (javaClassesToMockList == null) {
 			return null;
 		}
 
-		// Get Info about the Java files
 		for (ICompilationUnit javaCls : javaClassesToMockList) {
-			JavaInfo classInformation = ASTProcessor.getClassInformation(javaCls);
-			System.out.println(classInformation.getTypeName());
-
-			IFolder folder = (IFolder) UtilResource.getResource(pkgDestination.toOSString());
-			IJavaElement jFolder = JavaCore.create(folder);
-			System.out.println(jFolder.getElementName());
-
-			AST ast = AST.newAST(AST.JLS3);
-			
-			CompilationUnit unit = ASTProcessor.createCompilationUnit(ast, jFolder, classInformation);
-			
-			TypeDeclaration typeName = (TypeDeclaration) unit.types().get(0);
-			
-			System.out.println(unit);
-
-			String unitName = typeName.getName().getFullyQualifiedName()+".java";
-			writeUnitToFile(unit, unitName, pkgDestination);
-
+			mockJava(javaCls);
 		}
 
 		return null;
 	}
 
 	/**
-	 * 
+	 * @param javaCls
+	 */
+	private void mockJava(ICompilationUnit javaCls) {
+		// Get Info about the Java files
+		JavaInfo classInformation = ASTProcessor.getClassInformation(javaCls);
+		System.out.println(classInformation.getTypeName());
+
+		IFolder folder = (IFolder) UtilResource.getResource(pkgDestination.toOSString());
+		IJavaElement jFolder = JavaCore.create(folder);
+		System.out.println(jFolder.getElementName());
+
+		AST ast = AST.newAST(AST_LEVEL);
+		
+		// Create the unit
+		CompilationUnit unit = ASTProcessor.createCompilationUnit(ast, jFolder, javaCls);
+		
+		System.out.println(unit);
+
+		// Write the unit
+		String unitName = ASTProcessor.getTypeDeclaration(unit).getName().getFullyQualifiedName()+".java";
+		writeUnitToFile(unit, unitName, pkgDestination);
+	}
+
+	/**
+	 * Write the unit to the file
 	 * @param unit
 	 * @param unitName
 	 */

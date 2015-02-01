@@ -19,6 +19,11 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 import com.tcs.mobility.sf.lecton.utility.utils.UtilResource;
 
+/**
+ * @deprecated NOT USED SO FAR (Use in Future)
+ * @author Saravana
+ *
+ */
 public class DialogPackageSelection extends Dialog {
 
 	private Text txtPkgdestination;
