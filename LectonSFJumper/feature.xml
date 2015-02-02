@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="LectonSFJumper"
+      label="LectonSFJumper"
+      version="1.0.0.qualifier"
+      provider-name="TCS">
+
+  <description url="http://www.example.com/description">
+      Connects the various elements in the Site Factory project
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Owned by BNPP-Mobility, TCS.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      Licensed to BNPP-Mobility, TCS.
+   </license>
+
+   <plugin
+         id="com.tcs.mobility.sf.lecton.groovy.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.tcs.mobility.sf.lecton.jumper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
